@@ -56,4 +56,56 @@ res2: Int = 10
   >
   > val <식별자> = <함수명> _
 
-  ​
+  ```scala
+  scala> def double(x: Int): Int = x * 2
+  double: (x: Int)Int
+
+  scala> val myDouble = double _ // myDouble의 명시적 함수 타입은 함수 호출과 구별하기 위해 필요하지 									  않음, 언더스코어(_)는 미래의 함수 호출에 대한 자리표시자 역할, 								  myDouble에 저장할 수 있는 함숫값을 반환함
+  myDouble: Int => Int = $$Lambda$1102/1923626523@36478bce
+
+  scala> val amount = myDouble(20)
+  amount: Int = 40
+  ```
+
+- 다중 입력값을 가지는 함수 타입
+
+  - 입력 타입을 괄호로 명시적으로 묶음
+  - 매개변수 이름이 없는 함수 정의(function definition)의 형태
+
+  ```scala
+  scala> def max(a: Int, b: Int) = if (a > b) a else b
+  max: (a: Int, b: Int)Int
+
+  scala> val maximize: (Int, Int) => Int = max
+  maximize: (Int, Int) => Int = $$Lambda$1217/1836406440@48860139
+
+  scala> maximize(50, 30)
+  res0: Int = 50
+  ```
+
+- 입력값이 없는 함수 타입
+
+  - 빈 괄호는 값이 없음을 나타내는 Unit 타입의 리터럴 표현이기도 함
+
+  ```scala
+  scala> def logStart() = "=" * 50 + "\nStarting NOW\n" + "=" * 50
+  logStart: ()String
+
+  scala> val start: () => String = logStart
+  <console>:12: warning: Eta-expansion of zero-argument method values is deprecated. Did you intend to write logStart()?
+         val start: () => String = logStart
+                                   ^
+  start: () => String = $$Lambda$1255/300648514@4ed7db72
+
+  scala> println( start() )
+  ==================================================
+  Starting NOW
+  ==================================================
+  ```
+
+
+
+### 고차 함수
+
+------
+
