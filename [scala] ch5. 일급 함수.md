@@ -17,6 +17,7 @@
 
 
 
+
 ### 함수 타입과 값
 
 ------
@@ -105,7 +106,36 @@ res2: Int = 10
 
 
 
+
 ### 고차 함수
+
+------
+
+- 고차(higher-order) 함수 : 입력 매개변수나 반환값으로 함수 타입의 값을 가지는 함수
+- 고차 함수의 예
+  - String에서 동작하지만 입력 String이 널(null)이 아닌 경우에만 동작하는 다른 함수를 호출
+  - JVM의 NullPointerException 방지
+  - 기존 함수를 고차 함수에 매개변수로 전달하는 방법 보여줌 
+
+```scala
+scala> def safeStringOp(s: String, f: String => String) = {
+     |   if (s != null) f(s) else s
+     | }
+safeStringOp: (s: String, f: String => String)String
+
+scala> def reverser(s: String) = s.reverse
+reverser: (s: String)String
+
+scala> safeStringOp(null, reverser)
+res0: String = null
+
+scala> safeStringOp("Ready", reverser)
+res1: String = ydaeR
+```
+
+
+
+### 함수 리터럴
 
 ------
 
