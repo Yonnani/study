@@ -139,3 +139,130 @@ res1: String = ydaeR
 
 ------
 
+- 함수 리터럴(function literal)
+
+  - 실제 동작하지만 이름이 없는 함수
+
+  ```scala
+  scala> val doubler = (x: Int) => x * 2 // (x: Int) => x * 2 이 부분이 함수 리터럴
+  									   // 타입을 가진 입력 인수(x)와 함수 본문(x * 2)을 정의
+  doubler: Int => Int = $$Lambda$1076/1769827821@5d05f453
+
+  scala> val doubled = doubler(22)
+  doubled: Int = 44
+  ```
+
+  - 함숫값과 변수에 저장되거나 고차 함수 호출의 부분으로 정의될 수 있음
+
+  - 함수 타입을 받는 모든 곳에 함수 리터럴을 표현할 수 있음
+
+  - 종류
+
+    - 익명 함수(Anonymous function)
+
+      : 함수 리터럴에 대한 스칼라 언어의 공식적인 이름
+
+    - 람다 표현식(Lambda expression)
+
+      : 수학에서의 람다 계산(lambda calculus) 구문(ex. x -> x * 2)에서 유래된 용어
+
+    - 람다(Lambda)
+
+      : 람다 표현식의 축약형
+
+    - function0, function1, function2, ...
+
+      : 함수 리터럴에 대한 스칼라 컴파일러의 용어로 입력 인수의 개수를 기반으로 함
+
+  > 왜 그냥 익명 함수라 부르지 않을까?
+  >
+  > **익명 함수**는 이름이 없는 데에만 초점, 필자는 함수 본문의 모든 로직이 인라인으로 기술된다는 점을 명확히 보여주는 **함수 리터럴**이라는 용어를 선호함
+
+  - 구문: 함수 리터럴 작성하기
+
+  ```
+  ([<식별자>: <타입>, ... ]) => <표현식>
+  ```
+
+  ```Scala
+  scala> val greeter = (name: String) => s"Hello, $name"
+  greeter: String => String = $$Lambda$1110/962058379@1152900
+
+  scala> val hi = greeter("World")
+  hi: String = Hello, World
+  ```
+
+  > 함수 리터럴은 근본적으로 매개변수화된 표현식
+
+  - **함수 리터럴과 함수 할당 비교 예제**
+
+  ```scala
+  scala> def max(a: Int, b: Int) = if (a > b) a else b // 원본 함수 max()
+  max: (a: Int, b: Int)Int
+
+  scala> val maximize: (Int, Int) => Int = max // 함숫값에 할당됨
+  maximize: (Int, Int) => Int = $$Lambda$1116/872877010@1e7d3d87
+
+  scala> val maximize = (a: Int, b: Int) => if (a > b) a else b // 함수 리터럴로 재정의됨
+  maximize: (Int, Int) => Int = $$Lambda$1117/1328382325@44618fe6
+
+  scala> maximize(84, 96)
+  res0: Int = 96
+  ```
+
+  - **어떤 인수도 취하지 않는 함수 리터럴 정의 예제**
+
+  ```scala
+  scala> def logStart() = "=" * 50 + "\nStarting NOW\n" + "=" * 50
+  logStart: ()String
+
+  scala> val start = () => "=" * 50 + "\nStarting NOW\n" + "=" * 50
+  start: () => String = $$Lambda$1143/1386265672@28941a68
+
+  scala> println( start() )
+  ==================================================
+  Starting NOW
+  ==================================================
+  ```
+
+  - **고차 함수 호출 내부에 정의되는 함수 리터럴 예제**
+
+  ```scala
+  scala> def safeStringOp(s: String, f: String => String) = {
+       | if (s != null) f(s) else s
+       | }
+  safeStringOp: (s: String, f: String => String)String
+
+  scala> safeStringOp(null, (s: String) => s.reverse)
+  res2: String = null
+
+  scala> safeStringOp("Ready", (s: String) => s.reverse)
+  res3: String = ydaeR
+  ```
+
+  > 위 예제에서 함수 매개변수 'f'의 타입은 String => String임
+  >
+  > 이미 정의한 이 타입으로 함수 리터럴에서 명시적 타입을 제거할 수 있음
+  >
+  > 명시적 타입을 제거한다는 것은 우리가 함수 리터럴에서 괄호를 제거할 수 있다는 것을 의미
+
+  - **좀 더 단순한 구문을 사용하는 함수 리터럴로 'safeStringOp' 함수 다시 호출**
+
+  ```scala
+  scala> safeStringOp(null, s => s.reverse)
+  res4: String = null
+
+  scala> safeStringOp("Ready", s => s.reverse)
+  res5: String = ydaeR
+  ```
+
+  > 명시적 타입과 괄호를 제거한 함수 리터럴에는 함수의 기본적인 본질만 남게 됨
+  >
+  > 함수 리터럴은 입력 매개변수를 받아 그 매개변수로 연산을 수행한 결괏값을 반환함
+
+
+
+### 자리표시자 구문
+
+------
+
