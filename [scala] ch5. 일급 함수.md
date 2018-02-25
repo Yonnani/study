@@ -266,3 +266,118 @@ res1: String = ydaeR
 
 ------
 
+- 자리표시자 구문(placeholder syntax) : 함수 리터럴의 축약형
+
+- 지정된 매개변수를 와일드카드 연산자(_)로 대체한 형태를 가짐
+
+- 이 구문은 (a) 함수의 명시적 타입이 리터럴 외부에 지정되어 있고, (b) 매개변수가 한 번 이상 사용되지 않는 경우에 사용
+
+- 지정된 매개변수 자리에 와일드카드 연산자를 사용하여 두 배 함수 리터럴을 만드는 예제
+
+  ```scala
+  scala> val doubler: Int => Int = _ * 2
+  doubler: Int => Int = $$Lambda$1253/1695501686@ee9b7ac
+  ```
+
+  > 자리표시자 구문은 입력 매개변수가 한 번만 사용되고, 리터럴의 타입이 외부에(값(value)에) 명시적으로 정의되어 있기 때문에 유효함
+
+- 자리표시자 구문 이용하여 'safeStringOp' 예제 호출
+
+  ```scala
+  scala> def safeStringOp(s: String, f: String => String) = {
+       | if (s != null) f(s) else s
+       | }
+  safeStringOp: (s: String, f: String => String)String
+
+  scala> safeStringOp(null, _.reverse)
+  res6: String = null
+
+  scala> safeStringOp("Ready", _.reverse)
+  res7: String = ydaeR
+  ```
+
+  > 함수 리터럴 본문은 기능적으로 s => s.reverse와 같지만, 자리표시자 구문으로 단순화 함
+  >
+  > 입력 매개변수 s에 대한 참조는 함수에의 첫 번째 입력 매개변수를 나타내는 와일드카드(_)로 대체됨
+  >
+  > 근본적으로 와일드카드는 단일 String 입력 매개변수임
+
+- 두 개의 자리표시자를 가진 예제
+
+  ```scala
+  scala> def combination(x: Int, y: Int, f: (Int, Int) => Int) = f(x, y)
+  combination: (x: Int, y: Int, f: (Int, Int) => Int)Int
+
+  scala> combination(23, 12, _ * _)
+  res8: Int = 276
+  ```
+
+  > 두 개의 자리표시자를 사용하는 것은 구문을 더 추상적으로 만듦
+  >
+  > 자리표시자가 입력 매개변수(x와 y 각각)를 위치적으로 대체함
+  >
+  > 자리표시자의 개수는 입력 인수의 개수와 일치해야 함
+
+- 자리표시자 개수 세 개의 예제
+
+  ```scala
+  scala> def tripleOp(a: Int, b: Int, c: Int, f: (Int, Int, Int) => Int) = f(a, b, c)
+  tripleOp: (a: Int, b: Int, c: Int, f: (Int, Int, Int) => Int)Int
+
+  scala> tripleOp(2, 3, 4, _ * _ + _)
+  res1: Int = 10
+  ```
+
+  > tripleOp 함수는 네 개의 매개변수 취함
+  >
+  > 실제 함수 본문은 매개변수 리스트보다 훨씬 짧으며, 함수를 입력값에 적용함
+
+- 위의 tripleOp 함수를 두 개의 타입 매개변수(하나는 공통 입력 타입으로, 다른 하나는 반환값 타입으로)를 이용하여 재정의하는 예제
+
+  - tripleOp 함수를 우리가 선택한 어떤 입력 값이나 익명 함수(그 익명 함수가 세 개의 입력값을 취하는 한에는)로 호출할 수 있도록 유연성을 제공함
+
+  ```scala
+  scala> tripleOp[Int,Int](23, 92, 14, _ * _ + _)
+  res2: Int = 2130
+
+  scala> tripleOp[Int,Double](23, 92, 14, 1.0 * _ / _ / _)
+  res3: Double = 0.017857142857142856
+
+  scala> tripleOp[Int,Boolean](93, 92, 14, _ > _ + _)
+  res4: Boolean = false
+  ```
+
+- 자리표시자 구문은 특히 데이터 구조와 컬렉션으로 작업할 때 유용함
+
+- 수많은 정렬, 필터링, 그 외 다른 데이터 구조 메소드는 일급 함수를 사용하는 경향이 있으며, 자리표시자 구문은 이 메소드들을 호출하는 데 필요한 부가적인 코드의 양을 줄여줌
+
+
+
+### 부분 적용 함수와 커링
+
+------
+
+- 함수(일반 함수와 고차 함수 모두)를 호출하려면 전형적으로 호출문 내에 함수의 매개변수가 모두 지정되어 있어야 함
+
+
+
+### 이름에 의한 호출 매개변수
+
+------
+
+### 부분 함수
+
+------
+
+### 함수 리터럴 블록으로 고차 함수 호출하기
+
+------
+
+### 요약
+
+------
+
+### 연습문제
+
+------
+
