@@ -262,6 +262,7 @@ res1: String = ydaeR
 
 
 
+
 ### 자리표시자 구문
 
 ------
@@ -353,11 +354,71 @@ res1: String = ydaeR
 
 
 
+
 ### 부분 적용 함수와 커링
 
 ------
 
-- 함수(일반 함수와 고차 함수 모두)를 호출하려면 전형적으로 호출문 내에 함수의 매개변수가 모두 지정되어 있어야 함
+- 함수(일반 함수와 고차 함수 모두)를 호출하려면 전형적으로 호출문 내에 함수의 매개변수가 모두 지정되어 있어야 함(기본 매개변수 값이 있는 함수 제외)
+
+- 값이 다른 숫자의 인수(factor)인지를 검사하는 두 개의 매개변수를 가지는 하나의 함수 예제
+
+  ```scala
+  scala> def factorOf(x: Int, y: Int) = y % x == 0
+  factorOf: (x: Int, y: Int)Boolean
+  ```
+
+  - 여기서 어떤 매개변수도 유지하지 않고 함수를 호출하는 손쉬운 방법을 원한다면 와일드카드 연산자(_)를 사용 가능함
+
+  ```scala
+  scala> val f = factorOf _
+  f: (Int, Int) => Boolean = $$Lambda$1189/348026124@58882a93
+
+  scala> val x = f(7, 20)
+  x: Boolean = false
+  ```
+
+  - 매개변수 중 일부를 유지하기를 원하는 경우, 배개변수 중 하나의 자리를 대신하는 와일드 카드 연산자를 사용하여 그 함수를 부분적으로 적용(partially apply)할 수 있음
+
+    - 명시적 타입이 선언된 입력 타입으로 함숫값을 생성하는 데 사용되기 때문에, 이 경우 와일드카드 연산자는 명시적 타입을 필요로 함
+
+    ```scala
+    scala> val multipleOf3 = factorOf(3, _: Int)
+    multipleOf3: Int => Boolean = $$Lambda$1203/1660124157@1818d00b
+
+    scala> val y = multipleOf3(78)
+    y: Boolean = true
+    ```
+
+    > factorOf() 함수의 매개변수 중 일부를 포함하므로, 새로운 함숫값 multipleOf3은 부분 적용 함수임
+
+  - 다중 매개변수 목록을 가진 함수
+
+    - 하나의 매개변수 목록을 적용 매개변수와 미적용 매개변수로 나누고, 한 목록의 매개변수를 적용하고 다른 목록은 적용하지 않는 것 : 함수를 **커링(currying)**한다고 함
+
+    ```scala
+    scala> def factorOf(x: Int)(y: Int) = y % x == 0
+    factorOf: (x: Int)(y: Int)Boolean
+
+    scala> val isEven = factorOf(2) _
+    isEven: Int => Boolean = $$Lambda$1215/1766705563@6d71f296
+
+    scala> val z = isEven(32)
+    z: Boolean = true
+    ```
+
+    > 함수 타입 관점에서 다중 매개변수 목록을 가지는 함수는 다중 함수의 체인(chain)으로 간주함
+    >
+    > 각 분리된 매개변수 목록은 별도의 함수 호출로 간주함
+
+  - 함수 def factorOf(x: Int, y: Int)의 함수 타입은 (Int, Int) => Boolean 
+
+  - 함수 def factorOf(x: Int)(y: Int)의 함수 타입은 Int => Int => Boolean
+
+    - 이 함수를 커링하면, 함수 타입은 함수 체인 중 두 번째 함수인 Int => Boolean이 됨
+    - 위 예제의 함숫값 isEven은 체인으로 연결된 함수 중 첫 번째 부분을 정숫값 2로 커링함
+
+
 
 
 
