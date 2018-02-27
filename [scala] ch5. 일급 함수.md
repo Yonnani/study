@@ -426,9 +426,59 @@ res1: String = ydaeR
 
 ------
 
+- **이름에 의한(by-name)** 호출 매개변수
+
+  - 값, 함수 중 어떤 것으로도 호출 가능함
+  - 구문: 이름에 의한 호출 매개변수 지정하기
+
+  ```
+  <식별자>: => <타입>
+  ```
+
+  - 함수 내에서 이름에 의한 매개변수 사용 시, 함수가 전달되는 경우 그 함수를 사용할 때마다 해당 함수 호출하게 됨
+
+- 이름에 의한 매개변수의 이점
+
+  - 유연성이 높아짐 : 값을 사용할 수 있을 때, 함수를 사용해야 할 때 이용될 수 있음
+  - 이름에 의한 매개변수에 전달된 함수는 그 매개변수에 접근하지 않으면 호출되지 않으므로 필요한 경우에 비용이 따르는 함수 호출을 피할 수 있음
+
+- 이름에 의한 매개변수를 가지는 함수 호출 예제
+
+```scala
+scala> def doubles(x: => Int) = {
+     |   println("Now doubling " + x) --- 1
+     |   x * 2
+     | }
+doubles: (x: => Int)Int
+
+scala> doubles(5) --- 2
+Now doubling 5
+res1: Int = 10
+
+scala> def f(i: Int) = { println(s"Hello from f($i)"); i }
+f: (i: Int)Int
+
+scala> doubles( f(8) ) --- 3
+Hello from f(8)
+Now doubling 8
+Hello from f(8) --- 4
+res2: Int = 16
+```
+
+> 1. 이름에 의한 매개변수 x는 일반적인 값에 의한 매개변수(by-value parameter)와 같이 접근
+> 2. Doubles 메소드를 일반값으로 호출
+> 3. 함숫값으로 호출하면 함숫값이 doubles 메소드 내부에서 호출됨
+> 4. Doubles 메소드가 x 매개변수를 두 번 참조하므로 'Hello' 메시지가 두 번 호출됨
+
+
+
 ### 부분 함수
 
 ------
+
+
+
+
 
 ### 함수 리터럴 블록으로 고차 함수 호출하기
 
