@@ -476,6 +476,67 @@ res2: Int = 16
 
 ------
 
+- 완전 함수(total function)
+
+  - 입력 매개변수의 타입을 만족하는 모든 가능한 값을 적절하게 지원하는 함수
+
+  - 예제
+
+    ```scala
+    def double(x: Int) = x * 2
+    ```
+
+    - double() 함수가 처리하지 못하는 입력값 x가 존재하지 않으므로 완전 함수임
+
+- 부분 함수(partial function)
+
+  - 자신의 입력 데이터 중 일부에만 적용할 수 있는 함수
+  - 예
+    - 입력 숫자의 제곱근을 반환하는 함수는 입력 숫자가 음수인 경우 동작 불가능
+    - 주어진 수로 나누는 함수는 그 수가 0인 경우 적용 불가능
+
+- 스칼라의 부분함수
+
+  - 일련의 case 패턴을 자신의 입력값에 적용하는 함수 리터럴
+  - 입력값이 주어진 패턴 중 최소 하나는 일치할 것을 요구함
+  - Case 패턴 중 하나도 만족시키지 못하는 데이터로 부분 함수 중 하나를 호출하면 스칼라 에러 발생
+
+- 부분 함수와 부분 적용 함수의 차이
+
+  - 부분 함수
+    - 완전 함수와 반대되는 개념
+    - 모든 가능한 입력값 중 일부만 받아들임
+  - 부분 적용 함수
+    - 부분적으로 호출
+    - 나머지 부분도 미래에 완전히 호출되는 일반 함수
+
+
+```scala
+scala> val statusHandler: Int => String = {
+     | case 200 => "Okay"
+     | case 400 => "Your Error"
+     | case 500 => "Our error"
+     | }
+statusHandler: Int => String = $$Lambda$1132/709931821@36c7cbe1
+
+scala> statusHandler(200)
+res0: String = Okay
+
+scala> statusHandler(400)
+res1: String = Your Error
+
+scala> statusHandler(401) // case 패턴에 맞지 않는 정수로 호출 시 MatchError 발생함
+scala.MatchError: 401 (of class java.lang.Integer)
+  at .$anonfun$statusHandler$1(<console>:11)
+  at .$anonfun$statusHandler$1$adapted(<console>:11)
+  ... 28 elided
+```
+
+> MatchError를 방지하는 한 가지 방법으로 모든 다른 에러를 잡는 와일드카드 패턴을 마지막에 추가하는 것이지만, 이 경우라면 '부분 함수'라는 용어를 사용할 수 없을 것임
+>
+> 부분 함수가 컬렉션과 패턴 매칭으로 작업할 때 더 유용하다는 것을 알게 될 것임
+>
+> 예를 들어, 주어진 부분 함수가 허용하는 컬렉션의 모든 아이템을 '수집(collect)'할 수 있음
 
 
 
