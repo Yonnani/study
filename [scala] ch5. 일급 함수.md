@@ -545,9 +545,98 @@ scala.MatchError: 401 (of class java.lang.Integer)
 
 ------
 
+- 57쪽의 '표현식 블록을 이용한 함수 호출'을 고차 함수와 함께 재사용하여 함수 리터럴 블록을 괄호 대신 또는 괄호에 추가하여 고차 함수 호출 가능
+- 이름과 대규모 표현식 블록으로 호출된 함수는 함수 리터럴로 취하게 되며, 이 함수 리터럴은 한 번도 호출되지 않거나 혹은 여러 번 호출 가능함, 이 구문의 보편적인 용도는 표현식 블록으로 유틸리티 함수를 호출하는 것임
+- 일반 함수 리터럴과 함께 사용되는 'safeStringOp' 함수 예제
+
+
+```scala
+scala> def safeStringOp(s: String, f: String => String) = {
+     |   if (s != null) f(s) else s
+     | }
+safeStringOp: (s: String, f: String => String)String
+
+scala> val uuid = java.util.UUID.randomUUID.toString --------------------------- 1
+uuid: String = 329e76ec-9696-4364-b318-62eb3703bd01
+
+scala> val timedUUID = safeStringOp(uuid, { s =>
+     |   val now = System.currentTimeMillis ------------------------------------ 2
+     |   val timed = s.take(24) + now ------------------------------------------ 3
+     |   timed.toUpperCase
+     | })
+timedUUID: String = 329E76EC-9696-4364-B318-1519906275263
+```
+
+> 1. 스칼라에서 접근할 수 있는 자바의 java.util 패키지의 UUID 유틸리티
+> 2. System.currentTimeMillis는 1/1000초(1ms) 단위로 에포크 시간(epoch time, GMT 기준 1970년 1월 1일을 기점으로 경과 시간)을 제공하며, 타임스탬프를 생성하는 데 유용함
+> 3. take(x) 메소드는 String으로부터 처음 x개의 항목을 반환하며, 이 경우 UUID의 처음 네 부분을 반환함
+>
+> - 이 예제에서 여러 줄의 함수 리터럴이 값 매개변수와 함께 함수에 전달됨
+> - 제대로 동작하지만, 같은 괄호 안에 포함시키는 것은 다루기 불편함
+
+- 'safeStringOp'의 매개변수를 별도 그룹으로 구분하여 위의 문제를 개선한 예제
+  - 함수 타입을 포함하는 두 번째 매개변수 그룹은 표현식 블록 구문으로 호출 가능함
+
+```scala
+scala> def safeStringOp(s: String)(f: String => String) = {
+     |   if (s != null) f(s) else s
+     | }
+safeStringOp: (s: String)(f: String => String)String
+
+scala> val timedUUID = safeStringOp(uuid) { s =>
+     |   val now = System.currentTimeMillis
+     |   val timed = s.take(24) + now
+     |   timed.toUpperCase
+     | }
+timedUUID: String = 329E76EC-9696-4364-B318-1519906894378
+```
+
+> 괄호로 값 매개변수를, 그리고 독립된 함수 리터럴 블록으로 함수 배개변수를 전달함으로써 safeStringOp 호출이 깔끔해짐
+
+- 이름에 의한 매개변수 하나를 취하는 함수 예제
+
+```scala
+scala> def timer[A](f: => A): A = { ------------------------------------------- 1
+     |   def now = System.currentTimeMillis ----------------------------------- 2
+     |   val start = now; val a = f; val end = now
+     |   println(s"Executed in ${end - start} ms")
+     |   a
+     | }
+timer: [A](f: => A)A
+
+scala> val veryRandomAmount = timer { ----------------------------------------- 3
+     |   util.Random.setSeed(System.currentTimeMillis)
+     |   for (i <- 1 to 100000) util.Random.nextDouble ------------------------ 4
+     |   util.Random.nextDouble
+     | }
+Executed in 28 ms
+veryRandomAmount: Double = 0.38106401650672084
+```
+
+> 1. 타입 매개변수 'A'는 이름에 의한 매개변수 'f'의 반환 타입이 'timer' 함수의 반환 타입이 되도록 함으로써 'timer' 함수로 감싼 코드의 영향도를 줄임
+> 2. 내부의 중첩된 함수는 미학적인 이유로 우리가 1/1000초 단위의 현재 시간을 간결하게 추출할 수 있도록 해줌
+> 3. 고차 함수의 표현식 블록 구문을 가장 간단한 형태인 함수 이름과 블록으로 줄임, 괄호 안의 코드를 표현식 블록으로, 또는 함수 리터럴 블록으로, 또는 'timer' 함수로 싸인(wrapped) 일반 코드로 볼 수 있음
+> 4. 100,000개의 무작위 부동 소수점 숫자를 생성하고 폐기함, 이것은 시간 측정 데모를 보여주기 위해 시간을 써야 할 때 유용하지만, 실제 상품화될 코드에 사용하는 것은 권하지 않음
+>
+> - timer 함수는 개별 단위의 코드를 감싸기 위해 사용되지만, 기존 코드 베이스에 통합될 수도 있음
+> - 이 timer 함수로 함수의 마지막 부분을 감싸서 반드시 함수의 반환 값이 코드 블록으로부터 timer를 통해 전달되고, 그 함수에 의해 반환되도록 하면 그 함수 성능을 측정할 수 있음
+
+- 이 방법으로 어떠한 코드 블록도 유틸리티로 감쌀 수 있는 함수는 고차 함수를 '표현식-블록' 형태로 호출하는 주요 이점임
+- 이 호출 형태를 사용하는 다른 예
+  - 데이터베이스 트랜잭션 관리에서 고차 함수는 세션을 열고, 함수 매개변수를 호출하고, 커밋(commit) 또는 롤백(rollback)하여 트랜잭션을 종료함
+  - 오류를 내지 않을 때까지 횟수만큼 함수 매개변수를 호출함으로써 재시도로 예상한 오류 처리하기
+  - 지역, 전역 또는 외부 값(예 : 데이터베이스 설정 또는 환경변수)에 기반하여 조건부로 함수 매개변수 호출하기
+
+
+
+
 ### 요약
 
 ------
+
+- 스칼라는 함수를 고차 함수, 함수 리터럴, 함수 타입의 개념에 의해 지원받는 일급 데이터 타입으로 다룸
+
+
 
 ### 연습문제
 
