@@ -3,12 +3,13 @@
 - 함수형 프로그래밍의 핵심 가치 중 하나 : 함수는 일급(first-class) 객체이어야 함
   - 함수가 데이터 타입처럼 사용될 수 있다는 의미
   - 리터럴 형태로 생성 가능
-  - 컨테이너에 저장 가능 - 값/변수/데이터 구조처럼
-  - 다른 함수에 매개변수로 사용되거나 다른 함수의 반환 값으로 사용
+  - 값/변수/데이터 구조처럼 컨테이너에 저장 가능
+  - 다른 함수에 매개변수로 사용되거나 다른 함수의 반환 값으로 사용될 수 있음
     - 고차 함수(higher-order function)
     - Ex. map(), reduce() : 계산 작업을 일련의 분산 노드에 매핑, 그 결과를 의미있는 사이즈로 다시 줄임으로써 대규모 연산 처리 문제를 다룸
     - 데이터 처리 시 고차 함수를 사용하는 이점 중 하나 : 
-      - 데이터를 실제 처리하는 **방법(how)**은 고차 함수를 가지고 있는 프레임워크의 세부 구현사항으로 남겨둔다는 점임.(?) 호출자는 **무엇(what)**이 되어야 하는지를 지정하고, 실제 논리 흐름을 처리하는 것은 고차 함수에 맡길 수 있음 > 선언형 프로그래밍
+      - 데이터를 실제 처리하는 **방법(how)**은 고차 함수를 가지고 있는 프레임워크의 세부 구현사항으로 남겨둔다는 점임
+      - 호출자는 **무엇(what)**이 되어야 하는지를 지정하고, 실제 논리 흐름을 처리하는 것은 고차 함수에 맡길 수 있음 > 선언형 프로그래밍
 - 선언형 프로그래밍(declarative programming)
   - 고차 함수 또는 다른 메커니즘은 작업을 선언하는 데 사용되며 그 작업을 직접 수행하지 않음
 - 명령형 프로그래밍(imperative programming)
@@ -22,56 +23,81 @@
 
 ------
 
-- 함수의 **타입(type)** : 함수의 입력 타입과 반환값 타입의 단순 그룹
+- 함수의 **타입(type)**
 
-  > **구문: 함수 타입**
-  >
-  > ([<타입>, …]) => <타입>
+  - 함수의 입력 타입과 반환값 타입의 단순 그룹
 
-```Scala
-scala> def double(x: Int): Int = x * 2
-double: (x: Int)Int
+  - 입력 타입으로부터 출력 타입으로의 방향을 나타내는 화살표로 배열함
 
-scala> double(5)
-res0: Int = 10
+  - 구문: 함수 타입
 
-scala> val myDouble: (Int) => Int = double // myDouble은 값이지만, 다른 값들과 달리 호출 가능
-										   // 'myDouble' 값의 명시적 타입은 함수 호출이 아닌 함숫값으로 식별하는 데 필요함
-myDouble: Int => Int = $$Lambda$1120/1495001258@61808ecd
+    ```
+    ([<타입>, …]) => <타입>
+    ```
 
-scala> myDouble(5) // myDouble을 함수로 호출하는 것은 double을 호출하는 것과 같은 결과
-res1: Int = 10
+  - 함수 시그니처(function signature)는 이름, 입력, 출력이므로 함수의 타입은 입력과 출력이어야 함
 
-scala> val myDoubleCopy = myDouble
-myDoubleCopy: Int => Int = $$Lambda$1120/1495001258@61808ecd
+  - 함수 타입 이용 예제
 
-scala> myDoubleCopy(5) // 함숫값을 새로운 값에 할당하는 것은 다른 값들과 마찬가지로 가능
-res2: Int = 10
-```
+    ```scala
+    scala> def double(x: Int): Int = x * 2
+    double: (x: Int)Int
+
+    scala> double(5)
+    res0: Int = 10
+
+    scala> val myDouble: (Int) => Int = double ---------------------------- 1
+    										   
+    myDouble: Int => Int = $$Lambda$1120/1495001258@61808ecd
+
+    scala> myDouble(5) ---------------------------------------------------- 2
+    res1: Int = 10
+
+    scala> val myDoubleCopy = myDouble
+    myDoubleCopy: Int => Int = $$Lambda$1120/1495001258@61808ecd
+
+    scala> myDoubleCopy(5) ------------------------------------------------ 3
+    res2: Int = 10
+    ```
+
+    > 1. myDouble은 값이지만, 다른 값들과 달리 호출 가능
+    > 2. myDouble을 함수로 호출하는 것은 double을 호출하는 것과 같은 결과
+    > 3. 함숫값을 새로운 값에 할당하는 것은 다른 값들과 마찬가지로 가능
+    >
+    > - 'myDouble' 값의 명시적 타입은 함수 호출이 아닌 함숫값으로 식별하는 데 필요함
+    > - 함수로 할당된 함숫값을 정의하는 다른 방법은 와일드카드 연산자 '_'를 사용하는 것임
+
 
 - 단일 매개변수를 갖는 함수 타입은 괄호 생략 가능
+  - Ex. 단일 정수를 취하고 정수를 반환하는 함수의 타입 : Int => Int
 
-  - Ex. Int => Int
+- 구문: 와일드카드 연산자로 함수 할당하기
 
-  > **구문: 와일드카드 연산자로 함수 할당하기**
-  >
-  > val <식별자> = <함수명> _
-
-  ```scala
-  scala> def double(x: Int): Int = x * 2
-  double: (x: Int)Int
-
-  scala> val myDouble = double _ // myDouble의 명시적 함수 타입은 함수 호출과 구별하기 위해 필요하지 									  않음, 언더스코어(_)는 미래의 함수 호출에 대한 자리표시자 역할, 								  myDouble에 저장할 수 있는 함숫값을 반환함
-  myDouble: Int => Int = $$Lambda$1102/1923626523@36478bce
-
-  scala> val amount = myDouble(20)
-  amount: Int = 40
   ```
+  val <식별자> = <함수명> _
+  ```
+
+  - 예제
+
+    ```Scala
+    scala> def double(x: Int): Int = x * 2
+    double: (x: Int)Int
+
+    scala> val myDouble = double _
+    myDouble: Int => Int = $$Lambda$1102/1923626523@36478bce
+
+    scala> val amount = myDouble(20)
+    amount: Int = 40
+    ```
+
+    > - myDouble의 명시적 함수 타입은 필요하지 않음
+    > - 언더스코어(_)는 미래의 함수 호출에 대한 자리표시자 역할을 하며, myDouble에 저장할 수 있는 함숫값을 반환함
+
 
 - 다중 입력값을 가지는 함수 타입
 
   - 입력 타입을 괄호로 명시적으로 묶음
-  - 매개변수 이름이 없는 함수 정의(function definition)의 형태
+  - 매개변수 이름이 없는 함수 정의(function definition)의 형태를 띔
 
   ```scala
   scala> def max(a: Int, b: Int) = if (a > b) a else b
@@ -112,7 +138,7 @@ res2: Int = 10
 ------
 
 - 고차(higher-order) 함수 : 입력 매개변수나 반환값으로 함수 타입의 값을 가지는 함수
-- 고차 함수의 예
+- 고차 함수의 예제
   - String에서 동작하지만 입력 String이 널(null)이 아닌 경우에만 동작하는 다른 함수를 호출
   - JVM의 NullPointerException 방지
   - 기존 함수를 고차 함수에 매개변수로 전달하는 방법 보여줌 
@@ -133,6 +159,9 @@ scala> safeStringOp("Ready", reverser)
 res1: String = ydaeR
 ```
 
+> - 'null'로 호출하면 안전하게 같은 값을 반환
+> - 유효한 String으로 호출하면 입력 값을 거꾸로 한 값을 반환함
+
 
 
 ### 함수 리터럴
@@ -144,19 +173,22 @@ res1: String = ydaeR
   - 실제 동작하지만 이름이 없는 함수
 
   ```scala
-  scala> val doubler = (x: Int) => x * 2 // (x: Int) => x * 2 이 부분이 함수 리터럴
-  									   // 타입을 가진 입력 인수(x)와 함수 본문(x * 2)을 정의
+  scala> val doubler = (x: Int) => x * 2
+
   doubler: Int => Int = $$Lambda$1076/1769827821@5d05f453
 
   scala> val doubled = doubler(22)
   doubled: Int = 44
   ```
 
+  > - 위 예제에서 함수 리터럴은 구문 (x: Int) => x * 2
+  >   - 이 구문은 타입을 가진 입력 인수(x)와 함수 본문(x * 2)을 정의함
+
   - 함숫값과 변수에 저장되거나 고차 함수 호출의 부분으로 정의될 수 있음
 
   - 함수 타입을 받는 모든 곳에 함수 리터럴을 표현할 수 있음
 
-  - 종류
+  - 함수 리터럴 이름
 
     - 익명 함수(Anonymous function)
 
@@ -164,7 +196,7 @@ res1: String = ydaeR
 
     - 람다 표현식(Lambda expression)
 
-      : 수학에서의 람다 계산(lambda calculus) 구문(ex. x -> x * 2)에서 유래된 용어
+      : 수학에서의 람다 계산(lambda calculus) 구문(ex. x -> x * 2)에서 유래된 용어로 C#과 자바 8에서 사용함
 
     - 람다(Lambda)
 
@@ -184,6 +216,8 @@ res1: String = ydaeR
   ([<식별자>: <타입>, ... ]) => <표현식>
   ```
 
+  - 함숫값 정의, 이를 새로운 함수 리터럴에 할당하는 예제
+
   ```Scala
   scala> val greeter = (name: String) => s"Hello, $name"
   greeter: String => String = $$Lambda$1110/962058379@1152900
@@ -194,23 +228,27 @@ res1: String = ydaeR
 
   > 함수 리터럴은 근본적으로 매개변수화된 표현식
 
-  - **함수 리터럴과 함수 할당 비교 예제**
+  - 함수 리터럴과 함수 할당 비교 예제
 
   ```scala
-  scala> def max(a: Int, b: Int) = if (a > b) a else b // 원본 함수 max()
+  scala> def max(a: Int, b: Int) = if (a > b) a else b ------------------------ 1
   max: (a: Int, b: Int)Int
 
-  scala> val maximize: (Int, Int) => Int = max // 함숫값에 할당됨
+  scala> val maximize: (Int, Int) => Int = max -------------------------------- 2
   maximize: (Int, Int) => Int = $$Lambda$1116/872877010@1e7d3d87
 
-  scala> val maximize = (a: Int, b: Int) => if (a > b) a else b // 함수 리터럴로 재정의됨
+  scala> val maximize = (a: Int, b: Int) => if (a > b) a else b --------------- 3
   maximize: (Int, Int) => Int = $$Lambda$1117/1328382325@44618fe6
 
   scala> maximize(84, 96)
   res0: Int = 96
   ```
 
-  - **어떤 인수도 취하지 않는 함수 리터럴 정의 예제**
+  > 1. 원본 함수 max()
+  > 2. 함숫값에 할당됨
+  > 3. 함수 리터럴로 재정의됨
+
+  	- 어떤 인수도 취하지 않는 함수 리터럴 정의 예제
 
   ```scala
   scala> def logStart() = "=" * 50 + "\nStarting NOW\n" + "=" * 50
@@ -225,11 +263,11 @@ res1: String = ydaeR
   ==================================================
   ```
 
-  - **고차 함수 호출 내부에 정의되는 함수 리터럴 예제**
+  - 고차 함수 호출 내부에 정의되는 함수 리터럴 예제
 
   ```scala
   scala> def safeStringOp(s: String, f: String => String) = {
-       | if (s != null) f(s) else s
+       |   if (s != null) f(s) else s
        | }
   safeStringOp: (s: String, f: String => String)String
 
@@ -240,13 +278,14 @@ res1: String = ydaeR
   res3: String = ydaeR
   ```
 
-  > 위 예제에서 함수 매개변수 'f'의 타입은 String => String임
-  >
-  > 이미 정의한 이 타입으로 함수 리터럴에서 명시적 타입을 제거할 수 있음
-  >
-  > 명시적 타입을 제거한다는 것은 우리가 함수 리터럴에서 괄호를 제거할 수 있다는 것을 의미
+  > - 함수 safeStringOp는 f라는 이름의 함숫값을 매개변수로 받고 조건에 따라 이 함숫값을 호출 함
 
-  - **좀 더 단순한 구문을 사용하는 함수 리터럴로 'safeStringOp' 함수 다시 호출**
+  - 위 예제에서 함수 매개변수 'f'의 타입은 String => String임
+  - 이미 정의한 이 타입으로 함수 리터럴에서 명시적 타입을 제거할 수 있음
+  - 명시적 타입을 제거한다는 것은 우리가 함수 리터럴에서 괄호를 제거할 수 있다는 것을 의미
+
+
+  - 좀 더 단순한 구문을 사용하는 함수 리터럴로 'safeStringOp' 함수 다시 호출하는 예제
 
   ```scala
   scala> safeStringOp(null, s => s.reverse)
@@ -256,9 +295,10 @@ res1: String = ydaeR
   res5: String = ydaeR
   ```
 
-  > 명시적 타입과 괄호를 제거한 함수 리터럴에는 함수의 기본적인 본질만 남게 됨
-  >
-  > 함수 리터럴은 입력 매개변수를 받아 그 매개변수로 연산을 수행한 결괏값을 반환함
+  > - 명시적 타입과 괄호를 제거한 함수 리터럴에는 함수의 기본적인 본질만 남게 됨
+  > - 함수 리터럴은 입력 매개변수를 받아 그 매개변수로 연산을 수행한 결괏값을 반환함
+
+- 함수 리터럴은 매우 간단한 함수의 표현식이지만, 스칼라는 **자리표시자 구문(placeholder syntax)**으로 더 간단한 표현식을 지원함
 
 
 
@@ -271,7 +311,7 @@ res1: String = ydaeR
 
 - 지정된 매개변수를 와일드카드 연산자(_)로 대체한 형태를 가짐
 
-- 이 구문은 (a) 함수의 명시적 타입이 리터럴 외부에 지정되어 있고, (b) 매개변수가 한 번 이상 사용되지 않는 경우에 사용
+- 이 구문은 함수의 명시적 타입이 리터럴 외부에 지정되어 있고, 매개변수가 한 번 이상 사용되지 않는 경우에 사용
 
 - 지정된 매개변수 자리에 와일드카드 연산자를 사용하여 두 배 함수 리터럴을 만드는 예제
 
@@ -286,7 +326,7 @@ res1: String = ydaeR
 
   ```scala
   scala> def safeStringOp(s: String, f: String => String) = {
-       | if (s != null) f(s) else s
+       |   if (s != null) f(s) else s
        | }
   safeStringOp: (s: String, f: String => String)String
 
@@ -331,13 +371,16 @@ res1: String = ydaeR
 
   > tripleOp 함수는 네 개의 매개변수 취함
   >
-  > 실제 함수 본문은 매개변수 리스트보다 훨씬 짧으며, 함수를 입력값에 적용함
+  > 실제 함수 본문은 매개변수 리스트보다 훨씬 짧으며, 함수를 입력값에 적용함(?)
 
 - 위의 tripleOp 함수를 두 개의 타입 매개변수(하나는 공통 입력 타입으로, 다른 하나는 반환값 타입으로)를 이용하여 재정의하는 예제
 
   - tripleOp 함수를 우리가 선택한 어떤 입력 값이나 익명 함수(그 익명 함수가 세 개의 입력값을 취하는 한에는)로 호출할 수 있도록 유연성을 제공함
 
   ```scala
+  scala> def tripleOp[A,B](a: A, b: A, c: A, f: (A, A, A) => B) = f(a, b, c)
+  tripleOp: [A, B](a: A, b: A, c: A, f: (A, A, A) => B)B
+
   scala> tripleOp[Int,Int](23, 92, 14, _ * _ + _)
   res2: Int = 2130
 
@@ -378,9 +421,9 @@ res1: String = ydaeR
   x: Boolean = false
   ```
 
-  - 매개변수 중 일부를 유지하기를 원하는 경우, 배개변수 중 하나의 자리를 대신하는 와일드 카드 연산자를 사용하여 그 함수를 부분적으로 적용(partially apply)할 수 있음
+  - 매개변수 중 일부를 유지하기를 원하는 경우, 매개변수 중 하나의 자리를 대신하는 와일드 카드 연산자를 사용하여 그 함수를 부분적으로 적용(partially apply)할 수 있음
 
-    - 명시적 타입이 선언된 입력 타입으로 함숫값을 생성하는 데 사용되기 때문에, 이 경우 와일드카드 연산자는 명시적 타입을 필요로 함
+    - 이 경우 와일드카드 연산자는 명시적 타입을 필요로 하는데, 이 명시적 타입이 선언된 입력 타입으로 함숫값을 생성하는 데 사용되기 때문임
 
     ```scala
     scala> val multipleOf3 = factorOf(3, _: Int)
@@ -428,6 +471,7 @@ res1: String = ydaeR
 
 - **이름에 의한(by-name)** 호출 매개변수
 
+  - 값을 반환하는 함수를 취할 수 있음
   - 값, 함수 중 어떤 것으로도 호출 가능함
   - 구문: 이름에 의한 호출 매개변수 지정하기
 
@@ -446,22 +490,22 @@ res1: String = ydaeR
 
 ```scala
 scala> def doubles(x: => Int) = {
-     |   println("Now doubling " + x) --- 1
+     |   println("Now doubling " + x) ---------------------------------- 1
      |   x * 2
      | }
 doubles: (x: => Int)Int
 
-scala> doubles(5) --- 2
+scala> doubles(5) ------------------------------------------------------ 2
 Now doubling 5
 res1: Int = 10
 
 scala> def f(i: Int) = { println(s"Hello from f($i)"); i }
 f: (i: Int)Int
 
-scala> doubles( f(8) ) --- 3
+scala> doubles( f(8) ) ------------------------------------------------- 3
 Hello from f(8)
 Now doubling 8
-Hello from f(8) --- 4
+Hello from f(8) -------------------------------------------------------- 4
 res2: Int = 16
 ```
 
@@ -532,11 +576,9 @@ scala.MatchError: 401 (of class java.lang.Integer)
   ... 28 elided
 ```
 
-> MatchError를 방지하는 한 가지 방법으로 모든 다른 에러를 잡는 와일드카드 패턴을 마지막에 추가하는 것이지만, 이 경우라면 '부분 함수'라는 용어를 사용할 수 없을 것임
->
-> 부분 함수가 컬렉션과 패턴 매칭으로 작업할 때 더 유용하다는 것을 알게 될 것임
->
-> 예를 들어, 주어진 부분 함수가 허용하는 컬렉션의 모든 아이템을 '수집(collect)'할 수 있음
+> - MatchError를 방지하는 한 가지 방법으로 모든 다른 에러를 잡는 와일드카드 패턴을 마지막에 추가하는 것이지만, 이 경우라면 '부분 함수'라는 용어를 사용할 수 없을 것임
+> - 부분 함수가 컬렉션과 패턴 매칭으로 작업할 때 더 유용하다는 것을 알게 될 것임
+> - 예를 들어, 주어진 부분 함수가 허용하는 컬렉션의 모든 아이템을 '수집(collect)'할 수 있음
 
 
 
@@ -574,7 +616,7 @@ timedUUID: String = 329E76EC-9696-4364-B318-1519906275263
 > - 이 예제에서 여러 줄의 함수 리터럴이 값 매개변수와 함께 함수에 전달됨
 > - 제대로 동작하지만, 같은 괄호 안에 포함시키는 것은 다루기 불편함
 
-- 'safeStringOp'의 매개변수를 별도 그룹으로 구분하여 위의 문제를 개선한 예제
+- 'safeStringOp'의 매개변수를 별도 그룹으로 구분(64쪽 '매개변수 그룹' 참조)하여 위의 문제를 개선한 예제
   - 함수 타입을 포함하는 두 번째 매개변수 그룹은 표현식 블록 구문으로 호출 가능함
 
 ```scala
@@ -636,9 +678,39 @@ veryRandomAmount: Double = 0.38106401650672084
 
 - 스칼라는 함수를 고차 함수, 함수 리터럴, 함수 타입의 개념에 의해 지원받는 일급 데이터 타입으로 다룸
 
+  ​
+
 
 
 ### 연습문제
 
 ------
 
+1. 두 개의 정수를 취하여 더 높은 값을 반환하는 함수 리터럴을 작성하라. 그리고 세 개의 항목을 가진 정수 튜플과 이 함수를 취하여 튜플 내의 최댓값을 반환하는 고차 함수를 작성하라.
+
+2. 라이브러리 함수 util.Random.nextInt는 무작위로 정수를 반환한다. 이를 사용하여 세 개의 정수 난수와 두 개의 주어진 정수 중 큰 수를 반환하는 함수로 'max' 함수를 호출하라. 주어진 두 개의 정수 중 작은 수를 반환하는 함수로 동일한 작업을 해보고, 매번 두 번째 정수를 반환하는 함수로도 같은 작업을 반복해보자.
+
+3. 하나의 정수를 취하고 함수를 반환하는 고차 함수를 작성하라. 반환된 함수는 단일 정수 인수(말하자면, 'x')를 취해야 하며, x와 고차 함수에 전달된 정수의 곱을 반환한다.
+
+4. 여러분이 다른 개발자의 코드를 검토하다가 이 함수를 보게 되었다고 가정하자.
+
+   ```Scala
+   def fzero[A](x: A)(f: A => Unit): A = { f(x); x }
+   ```
+
+   이 함수는 무엇을 수행하는가? 어떻게 이 함수를 호출할 것인지 예를 들 수 있는가?
+
+5. 'square'라는 이름의 함수가 있는데, 이를 함숫값에 저장하고자 한다. 다음과 같이 하는 것이 맞는 방법인가? 그 밖에 어떤 방법으로 함수를 값에 저장할 수 있는가?
+
+   ```scala
+   def square(m: Double) = m * m
+   val sq = square
+   ```
+
+6. 'conditional'이라는 이름의 함수를 작성하라. 이 함수는 값 x와 두 함수 p와 f를 취하고, x와 동일한 타입의 값을 반환한다. p 함수는 조건자로 값 x를 취하여 Boolean b를 반환한다. 함수 f 역시 값 x를 취하고 동일한 타입의 새로운 값을 반환한다. 여러분의 'conditional' 함수는 p(x)가 참일 때에만 f(x)를 호출해야 하며, 그 외의 경우에는 x를 반환해야 한다. 'conditional'함수는 몇 개의 타입 매개변수를 필요로 할까?
+
+7. 3장 '연습문제'에서 'typesafe' 문제를 기억하는가? 유명한 코딩 관련 인터뷰 문제로, 1부터 100까지의 숫자를 한 줄에 하나씩 출력해야 하고, 3의 배수에서는 숫자를 단어 'type'으로, 5의 배수에서는 숫자를 'safe'로 교체해야 한다. 물론, 15의 배수는 'typesafe'를 출력해야 한다.
+
+   6번 문제의 'conditional' 함수를 이용하여 이 문제를 해결하라.
+
+   'conditional'의 반환 타입이 매개변수 x의 타입과 일치하지 않았다면, 여러분의 해답이 더 짧아졌을까? 이 도전에 더 잘 작동하도록 'conditional' 함수를 변경하고 실험해보자.
