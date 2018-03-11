@@ -71,7 +71,130 @@
       o.goFast(); // 불가능
       ```
 
-      ​
+  - Object 유형의 다형적 레퍼런스를 쓸 때 치뤄야 할 대가
 
-  ​
+    ```java
+    ArrayList<Object> myDogArrayList = new ArrayList<Object>();
+    Dog aDog = new Dog();
+    myDogArrayList.add(aDog);
+    Dog d = myDogArrayList.get(0); // 컴파일도 안됨
+    ```
+
+    > ArrayList<Object> 사용시, get() 메소드의 리턴 유형도 Object 임
+    >
+    > 따라서, 컴파일러에서는 그 객체가 Object의 하위클래스라는 것만 알고, Dog인지 모름
+
+  - 컴파일러에서 어떤 메소드를 호출할 수 있는지 결정할 때는 실제 객체 유형이 아닌 레퍼런스 유형을 기준으로 따짐
+
+- 다형성 : 여러 형태
+
+- 객체 레퍼런스를 실제 유형으로 캐스트하는 방법
+
+  ```java
+  Object o = al.get(index);
+  Dog d = (Dog) o; // 캐스트 연산자(Dog)를 써서 강제로 Dog 레퍼런스 변수로 만드는 방법
+  d.roam();
+
+  // Dog인지 잘 모르겠으면 instanceof 연산자를 써서 확인
+  if (o instanceof Dog) {
+      Dog d = (Dog) o;
+  }
+  ```
+
+- 컴파일러에서는 레퍼런스가 참조하는 실제 객체의 클래스가 아닌 레퍼런스 변수를 선언할 때 지정한 유형의 클래스를 확인함
+
+- 자바에서는 다중 상속을 사용할 수 없음
+
+  - 다중 상속에는 '죽음의 다이아몬드(The Deadly Diamond of Death)' 문제가 있기 때문
+
+- 자바에서는 다중 상속 대신 인터페이스(interface)를 제공함
+
+  - 인터페이스의 모든 메소드는 추상메소드임
+
+  - 정의
+
+    ```java
+    public interface Pet { ... }
+    ```
+
+  - 구현
+
+    ```java
+    public class Dog extends Canine implements Pet { ... }
+    ```
+
+- Pet 인터페이스 제작과 구현
+
+  ```java
+  public interface Pet {
+      public abstract void beFriendly();
+      public abstract void play();
+  }
+  ```
+
+  ```java
+  public class Dog extends Canine implements Pet {
+      public void beFriendly() { ... }
+      public void play() { ... }
+      
+      public void roam() { ... }
+      public void eat() { ... }
+  }
+  ```
+
+- 서로 다른 상속 트리에 속한 클래스에서도 같은 인터페이스를 구현할 수 있음
+
+- 한 클래스에서 인터페이스 여러 개를 구현할 수 있음
+
+- 어떤 클래스를 만들 때, 하위 클래스/추상 클래스/인터페이스 중 어느 것으로 만들지 결정할 수 있을까?
+
+  - 클래스 생성시 그 클래스가 (Object 제외한) 다른 어떤 유형에 대해서도 'A는 B다' 테스트를 통과할 수 없다면 그냥 클래스로 만듦
+  - 어떤 클래스의 더 구체적인 버전을 만들고 어떤 메소드를 오버라이드하거나 새로운 행동을 추가해야 한다면 하위클래스로 만듦(클래스 확장)
+  - 일련의 하위클래스에서 사용할 틀(template)을 정의하고 싶다면, 그리고 모든 하위클래스에서 사용할 구현 코드가 조금이라도 있다면 추상 클래스를 사용, 그리고 그 유형의 객체를 절대 만들 수 없게 하고 싶다면 그 클래스를 추상 클래스로 만듦
+  - 상속 트리에서 위치에 상관없이 어떤 클래스의 역할을 정의하고 싶다면 인터페이스를 사용
+
+- 상위클래스의 메소드를 호출하는 방법
+
+  ```java
+  abstract class Report {
+      void runReport() {
+          // 보고서 설정
+      }
+      void printReport() {
+          // 포괄적인 인쇄 작업
+      }
+  }
+
+  class BuzzwordsReport extends Report {
+      void runReport() {
+          super.runReport(); // 상위클래스 버전을 호출한 다음 하위클래스에서 해야할 일을 처리함
+          buzzwordCompliance();
+          printReport();
+      }
+      void buzzwordCompliance() { ... }
+  }
+  ```
+
+  - super 키워드는 객체의 상위클래스 부분에 대한 레퍼런스임
+
+- 핵심정리
+
+  - 클래스를 만들 때 인스턴스를 만들 수 없게 하고 싶다면 abstract 키워드를 사용하면 됨
+  - 추상 클래스에는 추상 메소드와 추상 메소드가 아닌 메소드 모두 존재 가능함
+  - 클래스에 추상 메소드가 하나라도 있으면 그 클래스는 추상 클래스로 지정해야 함
+  - 추상 메소드에는 본체가 없으며 선언 부분은 세미콜론으로 끝남
+  - 상속 트리에서 처음으로 나오는 구상 클래스에서는 반드시 모든 추상 메소드를 구현해야 함
+  - 자바에 있는 모든 클래스는 직접 또는 간접적으로 Object(java.lang.Object)의 하위클래스임
+  - 메소드 선언 시, 인자, 리턴 유형을 Object로 지정 가능
+  - 어떤 객체에 대해서 메소드를 호출하려면 그 객체를 참조하는 레퍼런스 변수 유형의 클래스(또는 인터페이스)에 그 메소드가 있어야 하며 객체 실제 유형과 무관함
+  - Object 유형의 레퍼런스 변수는 캐스팅을 하지 않고는 다른 유형의 레퍼런스에 대입 불가능
+  - ArrayList<Object>에서 나오는 객체는 모두 Object 유형으로 나옴
+  - "죽음의 다이아몬드"와 관련된 문제 때문에 자바에서는 다중 상속을 허용하지 않으며 클래스는 단 하나만 확장 가능함
+  - 인터페이스는 100% 순수한 추상 클래스임
+    - 인터페이스에서는 추상 메소드만 정의함
+  - 인터페이스를 만들 때는 class 대신 interface 키워드 사용함
+  - 인터페이스 구현 시 implements 키워드 사용
+  - 클래스 생성 시 여러 인터페이스 구현 가능
+  - 인터페이스의 모든 메소드는 자동으로 public, abstract 메소드가 되기 때문에 인터페이스를 구현하는 클래스에서는 인터페이스에 들어있는 모든 메소드를 구현해야 함
+  - 하위클래스에서 상위클래스 버전을 호출하고 싶다면 super라는 키워드 사용하면 됨
 
