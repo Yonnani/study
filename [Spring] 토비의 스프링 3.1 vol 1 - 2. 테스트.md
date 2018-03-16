@@ -100,3 +100,16 @@ public class UserDaoTest {
   2. 메소드에 @Test 애노테이션 붙여야 함
 - 메소드명은 테스트의 의도가 무엇인지 알 수 있는 이름이 좋음
 
+###### 검증 코드 전환
+
+- ```java
+  if (!user.getName().equals(user2.getName())) { ... }
+  ```
+
+  if 문장의 기능을 JUnit이 제공해주는 **assertThat** 이라는 스태틱 메소드를 이용해 다음과 같이 변경 가능
+
+  ```Java
+  assertThat(user2.getName(), is(user.getName()));
+  ```
+
+  ​
