@@ -150,3 +150,24 @@ public class UserDaoTest {
 - JUnit은 테스트 메소드 실행 순서 보장해주지 않음
 - 모든 테스트는 실행 순서에 관계없이 독립적으로 항상 동일한 결과를 내야함
 
+
+###### addAndGet() 테스트 보완
+
+###### get() 예외조건에 대한 테스트
+
+- 예외 발생 여부는 메소드를 실행해서 리턴 값을 비교하는 방법으로 확인할 수 없는 문제 존재
+
+  - assertThat() 메소드로 검증 불가능
+  - 이 문제를 해결하기 위해 JUnit은 예외조건 테스트를 위한 방법 제공
+
+  ```java
+  @Test(expected=EmptyResultDataAccessException.class)
+  public void getUserFailure() throws SQLException {
+      ...
+  }
+  ```
+
+  - @Test 애노테이션의 expected 엘리먼트에 예외 클래스 넣어주면 됨
+
+###### 테스트를 성공시키기 위한 코드의 수정
+
