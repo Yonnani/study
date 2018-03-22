@@ -223,3 +223,24 @@ public class UserDaoTest {
 
 ###### 픽스처
 
+- 픽스처(fixture) : 테스트를 수행하는 데 필요한 정보나 오브젝트
+- 일반적으로 픽스처는 여러 테스트에서 반복적으로 사용되므로 @Before 메소드를 이용해 생성해두면 편리함
+- 픽스처 생성 로직이 모여 있는 편이 좋으므로 가능한 한 @Before 메소드 이용
+
+```Java
+public class UserDaoTest {
+    private UserDao dao;
+    private User user1;
+    private User user2;
+    private User user3;
+    
+    @Before
+    public void setUp() {
+        ...
+        this.user1 = new User("gyumee", "박성철", "springno1");
+        this.user2 = new User("leegw700", "이길원", "springno2");
+        this.user3 = new User("bumjin", "박범진", "springno3");
+    }
+}
+```
+
