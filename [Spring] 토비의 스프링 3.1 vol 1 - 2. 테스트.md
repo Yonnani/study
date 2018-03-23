@@ -244,3 +244,33 @@ public class UserDaoTest {
 }
 ```
 
+### 2.4 스프링 테스트 적용
+
+- 애플리케이션 컨텍스트는 한 번만 만들고 여러 테스트가 공유해서 사용해도 됨
+- JUnit은 테스트 클래스 전체에 걸쳐 딱 한 번만 실행되는 @BeforeClass 스태틱 메소드를 지원함
+
+#### 2.4.1 테스트를 위한 애플리케이션 컨텍스트 관리
+
+###### 스프링 테스트 컨텍스트 프레임워크 적용
+
+```Java
+@RunWith(SpringJUnit4ClassRunner.class) // 스프링의 테스트 컨텍스트 프레임워크의 JUnit 확장기능 지정
+@ContextConfiguration(locations="/applicationContext.xml") // 테스트 컨텍스트가 자동으로 만들어줄 애플리케이션 컨텍스트의 위치 지정
+public class UserDaoTest {
+    @Autowired
+    private ApplicationContext context; // 테스트 오브젝트가 만들어지고 나면 스프링 테스트 컨텍스트에 의해 자동으로 값이 주입됨
+    ...
+        
+    @Before
+    public void setUp() {
+        this.dao = this.context.getBean("userDao", UserDao.class);
+        ...
+    }
+}
+```
+
+- @RunWith는 JUnit 프레임워크의 테스트 실행 방법을 확장할 때 사용하는 애노테이션
+
+
+- SpringJUnit4ClassRunner라는 JUnit용 테스트 컨텍스트 프레임워크 확장 클래스를 지정해주면 JUnit이 테스트를 진행하는 중에 테스트가 사용할 애플리케이션 컨택스트를 만들고 관리하는 작업을 진행해줌
+- @ContextConfiguration은 자동으로 만들어줄 애플리케이션 컨텍스트의 설정파일 위치를 지정한 것임
