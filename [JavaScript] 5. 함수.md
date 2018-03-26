@@ -12,3 +12,41 @@
 
 ### 5.2 선언적 함수
 
+- 아래의 방식으로 생성한 함수 : 선언적 함수
+
+```Javascript
+function 함수() {
+    
+}
+```
+
+- 선언적 함수는 다음 코드와 같은 기능을 수행함
+
+```Javascript
+var 함수 = function () { };
+```
+
+- 익명 함수의 재정의
+
+```html
+<script>
+   	함수();
+    var 함수 = function () { alert('함수 A'); };
+    var 함수 = function () { alert('함수 B'); };
+</script>
+```
+
+> - 오류 발생
+> - 변수를 선언하기 이전에 변수를 사용했기 때문임
+
+```Html
+<script>
+    함수();
+    function 함수 () { alert('함수 A'); };
+    function 함수 () { alert('함수 B'); };
+</script>
+```
+
+> - 정상적으로 코드 실행
+> - 웹 브라우저는 script 태그 내부의 내용을 한 줄씩 읽기 전에 선언적 함수부터 읽음
+
