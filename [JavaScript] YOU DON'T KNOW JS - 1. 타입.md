@@ -80,3 +80,22 @@ if (typeof atob === "undefined") {
 
 - typeof 안전가드 없이 전역 변수 체크하는 다른 방법 : 전역 변수가 모두 전역 객체(브라우저는 window)의 프로퍼티라는 점을 이용하는 것
 
+- ```javascript
+  var atob; // 선언문이 호이스팅된다
+  if (typeof atob === "undefined") {
+      atob = function() { /* ... */ };
+  }
+
+  if (window.DEBUG) {
+      // ...
+  }
+
+  if (window.atob) {
+      // ...
+  }
+  ```
+
+  > ReferenceError 나지 않음
+
+  Window 객체를 통한 전역 변수 참조는 가급적 삼가는 것이 좋음
+
