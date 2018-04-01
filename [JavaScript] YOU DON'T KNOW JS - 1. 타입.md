@@ -70,32 +70,42 @@
 - 예제 코드
 
 
-```javascript
-if (typeof atob === "undefined") {
-    atob = function() { /* ... */}
-}
-```
-
-> 명시적으로 var를 빼야 선언문이 호이스팅되지 않음
-
-- typeof 안전가드 없이 전역 변수 체크하는 다른 방법 : 전역 변수가 모두 전역 객체(브라우저는 window)의 프로퍼티라는 점을 이용하는 것
-
-- ```javascript
-  var atob; // 선언문이 호이스팅된다
+  ```javascript
   if (typeof atob === "undefined") {
-      atob = function() { /* ... */ };
-  }
-
-  if (window.DEBUG) {
-      // ...
-  }
-
-  if (window.atob) {
-      // ...
+      atob = function() { /* ... */}
   }
   ```
 
-  > ReferenceError 나지 않음
+  - 명시적으로 var를 빼야 선언문이 호이스팅되지 않음
 
-  Window 객체를 통한 전역 변수 참조는 가급적 삼가는 것이 좋음
+  - typeof 안전가드 없이 전역 변수 체크하는 다른 방법 : 전역 변수가 모두 전역 객체(브라우저는 window)의 프로퍼티라는 점을 이용하는 것
+
+  - ```javascript
+    var atob; // 선언문이 호이스팅된다
+    if (typeof atob === "undefined") {
+        atob = function() { /* ... */ };
+    }
+
+    if (window.DEBUG) {
+        // ...
+    }
+
+    if (window.atob) {
+        // ...
+    }
+    ```
+
+    > ReferenceError 나지 않음
+
+    - Window 객체를 통한 전역 변수 참조는 가급적 삼가는 것이 좋음
+
+#### 1.4 정리하기
+
+- 자바스크립트에는 7가지 내장 타입(null, undefined, boolean, number, string, object, symbol)이 있음
+- typeof 연산자로 타입명 알아냄
+- 변수는 타입 없고 값은 타입 있음
+- 타입은 값의 내재된 특성을 정의함
+- `undefined`는 선언된 변수에 할당할 수 있는 값, `undeclared`는 변수 자체가 선언된 적이 없음을 나타냄
+  - 두 경우 모두 에러 메세지는 ReferenceError, typeof 반환 값도 모두 `undefined`
+
 
