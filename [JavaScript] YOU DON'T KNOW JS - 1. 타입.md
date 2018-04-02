@@ -108,4 +108,3 @@
 - `undefined`는 선언된 변수에 할당할 수 있는 값, `undeclared`는 변수 자체가 선언된 적이 없음을 나타냄
   - 두 경우 모두 에러 메세지는 ReferenceError, typeof 반환 값도 모두 `undefined`
 
-
