@@ -74,7 +74,44 @@
 ### 2.2 문자열
 
 - 자바스크립트 문자열은 문자 배열과 같지 않음
+
 - 문자열은 불변 값(immutable)이지만 배열은 가변 값(mutable)
+
 - 문자열이 불변 값이므로 문자열 메서드는 그 내용을 바로 변경하지 않고 항상 새로운 문자열을 생성한 후 반환함
+
 - 반면 대부분의 배열 메서드는 그 자리에서 곧바로 원소를 수정함
-- ​
+
+- 문자열을 다룰 때 유용한 대부분의 배열 메서드는 쓸 수 없지만, 문자열에 대해 불변 배열 메서드를 빌려 쓸 수는 있음
+
+  ```javascript
+  var a = "foo";
+  var b = ["f","o","o"];
+
+  a.join; // undefined
+  a.map; // undefined
+
+  var c = Array.prototype.join.call(a, "-");
+  var d = Array.prototype.map.call(a, function (v) {
+      return v.toUpperCase() + ".";
+  }).join("");
+
+  c; // "f-o-o"
+  d; // "F.O.O."
+
+  a.reverse; // undefined
+  b.reverse(); // ["o","o","f"]
+  b; // ["o","o","f"]
+  ```
+
+- 문자열은 불변 값이라 바로 변경되지 않으므로 배열의 가변 메서드는 통하지 않고, 그래서 '빌려 쓰는 것' 또한 안됨
+
+- 문자열을 배열로 바꾸고 원하는 작업을 수행한 후 다시 문자열로 되돌리는 것이 또다른 꼼수(핵Hack)임
+
+  ```javascript
+  var c = a.split("").reverse().join("");
+
+  c; // "oof"
+  ```
+
+- '문자열' 자체에 어떤 작업을 빈번하게 수행하는 경우라면 문자열을 문자 단위로 저장하는 배열로 취급하는 것이 더 나을 수도 있음
+
