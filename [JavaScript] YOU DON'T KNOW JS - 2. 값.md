@@ -115,3 +115,63 @@
 
 - '문자열' 자체에 어떤 작업을 빈번하게 수행하는 경우라면 문자열을 문자 단위로 저장하는 배열로 취급하는 것이 더 나을 수도 있음
 
+
+### 2.3 숫자
+
+- 자바스크립트 숫자 타입은 number가 유일, 정수(Integer), 부동 소수점 숫자(Fractional Decimal Number) 모두 포함
+
+### 2.3.1 숫자 구문
+
+- 소수점 앞 정수가 0이면 생략 가능
+
+  ```javascript
+  var a = 0.42;
+  var b = .42;
+  ```
+
+
+- 소수점 이하가 0일 때도 생략 가능
+
+  ```javascript
+  var a = 42.0;
+  var b = 42.
+  ```
+
+- 대부분의 숫자는 10진수가 디폴트고 소수점 이하 0은 뗌
+
+  ```javascript
+  var a = 42.300;
+  var b = 42.0;
+
+  a; // 42.3
+  b; // 42
+  ```
+
+- 아주 작거나 큰 숫자는 지수형으로 표시, toExponential()의 결괏값과 같음
+
+  ```javascript
+  var a = 5E10;
+  a; // 50000000000
+  a.toExponential(); // "5e+10"
+
+  var b = a * a;
+  b; // 2.5e+21
+
+  var c = 1/a;
+  c; // 2e-11
+  ```
+
+- 숫자 값은 Number 객체 래퍼로 박싱할 수 잇기 때문에 Number.prototype 메서드로 접근 가능
+
+  ```javascript
+  var a = 42.59;
+
+  a.toFixed(0); // "43"
+  a.toFixed(1); // "42.6"
+  a.toFixed(2); // "42.59"
+  a.toFixed(3); // "42.590"
+  a.toFixed(4); // "42.5900"
+  ```
+
+  ​
+
