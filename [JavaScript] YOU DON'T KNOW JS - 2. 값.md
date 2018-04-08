@@ -238,3 +238,49 @@
 
 ### 2.3.2 작은 소수 값
 
+- 이진 부동 소수점 숫자의 부작용
+
+  ```javascript
+  0.1 + 0.2 === 0.3; // false
+  ```
+
+  > - 수식만 보면 분명 true
+  > - 하지만 이진 부동 소수점으로 나타낸 0.1과 0.2는 원래 숫자와 일치하지 않음
+  > - 더한 결과는 실제로 0.30000000000000004에 가까움
+
+- 그렇다면, 0.1 + 0.2와 0.3 두 숫자 비교 방법은?
+
+  - 미세한 '반올림 오차'를 허용 공차(Tolerence)로 처리하는 방법이 있음
+
+    - 미세한 오차 : 머신 입실론(Machine Epsilon), 자바스크립트의 머신 입실론은 2^-52임
+
+    - ES6부터는 이 값이 Number.EPSILON으로 미리 정의되어 있음
+
+    - ES6 이전 브라우저는 다음의 폴리필 사용하면 됨
+
+      ```javascript
+      if (!Number.EPSILON) {
+          Number.EPSILON = Math.pow(2, -52);
+      }
+      ```
+
+    - Number.EPSILON으로 두 숫자의 (반올림 허용 오차 이내의) 동등함(Equality)을 비교할 수 있음
+
+      ```javascript
+      function numbersCloseEnoughToEqual(n1, n2) {
+          return Math.abs( n1- n2 ) < Number.EPSION;
+      }
+
+      var a = 0.1 + 0.2;
+      var b = 0.3;
+
+      numbersCloseEnoughToEqual( a, b ); // true
+      numbersCloseEnoughToEqual( 0.0000001, 0.0000002 ); // false
+      ```
+
+- 부동 소수점 숫자의 최댓값은 대략 1.798e+308이고, `Number.MAX_VALUE`로 정의
+
+- 부동 소수점 숫자의 최솟값은 대략 5e-324로 음수는 아니지만 거의 0에 가까운 숫자고, `Number.MIN_VALUE`로 정의함
+
+### 2.3.3 안전한 정수 범위
+
