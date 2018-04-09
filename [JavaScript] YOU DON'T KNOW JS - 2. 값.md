@@ -284,3 +284,51 @@
 
 ### 2.3.3 안전한 정수 범위
 
+- 정수는 Number.MAX_VALUE보다 작은 수준에서 '안전(safe)' 값의 범위가 정해져 있음
+  - '안전하게' 표현할 수 있는 정수는 최대 `2^53 - 1(9007199254740991)`임
+    - ES6에서 `Number.MAX_SAFE_INTEGER`로 정의함
+  - '안전하게' 표현할 수 있는 정수는 최소 `-9007199254740991`임
+    - ES6에서 `Number.MIN_SAFE_INTEGER`로 정의함
+- 아주 큰 수를 다룰 수밖에 없는 상황이라면, 지금으로서는 큰 수(Big Number) 유틸리티 사용을 권함
+
+### 2.3.4 정수인지 확인
+
+- ES6부터는 `Number.isInteger()`로 정수 여부 확인
+
+  ```javascript
+  Number.isInteger(42); // true
+  Number.isInteger(42.000); // true
+  Number.isInteger(42.3); // false
+  ```
+
+- ES6 이전 버전을 위한 폴리필
+
+  ```javascript
+  if (!Number.isInteger) {
+      Number.isInteger = function(num) {
+          return typeof num == "number" && num % 1 == 0;
+      }
+  }
+  ```
+
+- 안전한 정수 여부는 ES6부터 `Number.isSafeInteger()`로 체크
+
+  ```javascript
+  Number.isSafeInteger(Number.MAX_SAFE_INTEGER); // true
+  Number.isSafeInteger(Math.pow(2, 53)); // false
+  Number.isSafeInteger(Math.pow(2, 53) - 1); // true
+  ```
+
+- 폴리필
+
+  ```javascript
+  if (!Number.isSafeInteger) {
+      Number.isSafeInteger = function (num) {
+          return Number.isInteger(num) &&
+              Math.abs(num) <= Number.MAX_SAFE_INTEGER;
+      };
+  }
+  ```
+
+### 2.3.5 32비트(부호 있는) 정수
+
