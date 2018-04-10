@@ -350,3 +350,49 @@
 
 #### 2.4.2 Undefined
 
+- 느슨한 모드에서는 전역 스코프에서 undefined란 식별자에 값을 할당할 수 있음(하지만 절대 추천하지 않음)
+- 그런데 모드에 상관없이 undefined란 이름을 가진 지역 변수는 생성할 수 있음(하지만 쓰지말자)
+
+##### void 연산자
+
+- undefined는 내장 식별자로, 값은 undefined지만, 이 값은 void 연산자로도 얻을 수 있음
+
+- 표현식 void __는 어떤 값이든 '무효로 만들어', 항상 결괏값을 undefined로 만듦
+
+  - 기존 값은 건드리지 않고 연산 후 값은 복구할 수 없음
+
+    ```javascript
+    var a = 42;
+
+    console.log( void a, a ); // undefined 42
+    ```
+
+- 관례에 따라 void만으로 undefined 값을 나타내려면 void 0이라고 씀
+
+  - Void 0, void 1, undefined 모두 같음
+
+- void 연산자는 어떤 표현식의 결괏값이 없다는 걸 확실히 밝혀야 할 때 긴요함
+
+  ```Javascript
+  function doSomething() {
+   	// 참고: 'App.ready'는 이 애플리케이션에서 제공한 값임
+      if (!APP.ready) {
+          // 나중에 다시 해보자!
+          return void setTimeout( doSomething, 100 );
+      }
+      
+      var result;
+      // 별도 처리 수행
+      return result;
+  }
+
+  // 제대로 처리했나?
+  if (doSomething()) {
+      // 다음 작업 바로 실행
+  }
+  ```
+
+  - setTimeout() 함수는 숫자 값(타이머를 취소할 때 사용할 타이머의 고유 식별자)을 반환하지만, 예제에서는 이 숫자 값을 무효로 만들어 doSomething() 함수의 결괏값이 if 문에서 긍정 오류가 일어나지 않게 했다.
+
+  ​
+
