@@ -420,7 +420,44 @@
     ```javascript
     var a = 2 / "foo"; // NaN
 
-    typeof a === "number"; // true
+    typeof a === "number"; // true 
     ```
 
-    ​
+  - `NaN`은 경계 값의 일종으로 (또는 특별한 의미를 부여한 평범한 값으로) 숫자 집합 내에서 특별한 종류의 에러 상황을 나타냄
+
+  - ```Javascript
+    var a = 2 / "foo";
+
+    a == NaN; // false
+    a === NaN; // false
+    ```
+
+    반사성(Reflexive)이 없는(x === x 로 식별되지 않는) 유일무이한 값임
+
+    따라서 NaN !== NaN 임
+
+  - 비교 불능이므로
+
+    ```Javascript
+    var a = 2 / "foo";
+    isNaN( a ); // true
+    ```
+
+    이렇게 `NaN` 확인 가능함
+
+  - 하지만 치명적인 결함
+
+    ```Javascript
+    var a = 2 / "foo";
+    var b = "foo";
+
+    a; // NaN
+    b; // "foo"
+
+    window.isNaN(a); // true
+    window.isNaN(b); // true !!!
+    ```
+
+    "foo"는 숫자도 아니고 NaN도 아님
+
+  - ES6부터 해결사 등장
