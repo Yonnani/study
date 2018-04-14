@@ -460,4 +460,131 @@
 
     "foo"는 숫자도 아니고 NaN도 아님
 
-  - ES6부터 해결사 등장
+  - ES6부터 해결사 등장, `Number.isNaN()`
+
+  - 폴리필
+
+    ```javascript
+    if (!Number.isNaN) {
+        Number.isNaN = function (n) {
+            return (
+                typeof n === "number" && 
+                window.isNaN(n)
+            );
+        };
+    }
+
+    var a = 2 / "foo";
+    var b = "foo";
+
+    Number.isNaN( a ); // true
+    Number.isNaN( b ); // false
+    ```
+
+  - NaN이 자기 자신과도 동등하지 않는 독특함을 응용하여 폴리필을 더 간단히 구현 가능함
+
+  - NaN은 "자기가 아닌 다른 어떤 값도 항상 자신과 동등한" 유일한 값임
+
+    ```javascript
+    if (!Number.isNaN) {
+        Number.isNaN = function (n) {
+            return n !== n;
+        };
+    }
+    ```
+
+- 무한대
+
+  - 자바스크립트에서는 0으로 나누기 연산이 잘 정의되어 있어서 에러 없이 Infinity (Number.POSITIVE_INFINITY)라는 결괏값이 나옴
+
+  - 분자가 음수면 0으로 나누기 결괏값은 -Infinity (Number.NEGATIVE_INFINITY) 임
+
+    ```javascript
+    var a = 1 / 0; // Infinity
+    var b = -1 / 0; // -Infinity
+    ```
+
+  - 자바스크립트는 유한 숫자 표현식(Finite Numeric Representations)을 사용하므로 덧셈, 뺄셈 결과가 +무한대/-무한대가 될 수 있음
+
+    ```javascript
+    var a = Number.MAX_VALUE; // 1.7976931348623157e+308
+    a + a; // Infinity
+    a + Math.pow( 2, 970 ); // Infinity
+    a + Math.pow( 2, 969 ); // 1.7976931348623157e+308
+    ```
+
+  - IEEE 754 명세에 따르면, 연산 결과가 너무 크면 '가장 가까운 수로 반올림' 모드가 결괏값을 정함
+
+  - `Number.MAX_VALUE + Math.pow( 2, 969 )`는 무한대보다는 `Number.MAX_VALUE`에 가깝기 때문에 '버림' 처리하고 `Number.MAX_VALUE + Math.pow( 2, 970 )`은 무한대에 더 가깝기 때문에 '올림' 처리함
+
+  - `무한대/무한대`는 '정의되지 않은 연산'이며 결괏값은 NaN임
+
+- 영(0)
+
+  - 자바스크립트에는 보통의 영(+0)과 음의 영(-0)이 있음
+
+  - 음의 영은 표기 뿐만 아니라 특정 수식의 연산 결과 또한 -0으로 떨어짐
+
+    ```javascript
+    var a = 0 / -3; // -0
+    var b = 0 * -3; // -0
+    ```
+
+  - 덧셈과 뺄셈에는 -0이 나올 일이 없음
+
+  - 명세에 의하면 -0을 문자열화(stringify)하면 항상 "0"임
+
+    ```javascript
+    var a = 0 / -3;
+
+    // (일부 브라우저에 한하여) 제대로 표시함
+    a; // -0
+
+    // 하지만 명세는 거짓말을 하라고 시킴
+    a.toString(); // "0"
+    a + ""; // "0"
+    String(a); // "0"
+
+    // 이상하게 JSON조차 속아 넘어감
+    JSON.stringify(a); // "0"
+
+    // 그런데 이건 -0임
+    JSON.parse("-0"); // -0
+    ```
+
+  - 비교 연산 역시 
+
+    ```javascript
+    var a = 0;
+    var b = 0 / -3;
+
+    a == b; // true
+    -0 == 0; // true
+
+    a === b; // true
+    -0 === 0; // true
+
+    0 > -0; // false
+    a > b; // false
+    ```
+
+  - 확실하게 -0과 0을 구분하고 싶다면
+
+    ```javascript
+    function isNegZero(n) {
+        n == Number(n);
+        return (n === 0) && (1/n === -Infinity);
+    }
+
+    isNegZero( -0 ); // true
+    isNegZero( 0 / -3 ); // true
+    isNegZero( 0 ); // false
+    ```
+
+  - 그러면 -0은 왜 만든 것일까?
+
+    - 값의 크기로 어떤 정보(예: 애니메이션 프레임당 넘김 속도)와 그 값의 부호로 또 다른 정보(예: 넘김 방향)를 동시에 나타내야 하는 애플리케이션이 있기 때문임
+    - 잠재적인 정보 소실을 방지하기 위해 0의 부호를 보존
+
+#### 2.4.4 특이한 동등 비교
+
