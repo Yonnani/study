@@ -588,3 +588,39 @@
 
 #### 2.4.4 특이한 동등 비교
 
+- ES6부터는 NaN, -0의 예외를 걱정하지 않아도 두 값이 절대적으로 동등한지 확인하는 새로운 유틸리티 지원함 : `Object.is()`
+
+  ```javascript
+  var a = 2 / "foo";
+  var b = -3 * 0;
+
+  Object.is( a, NaN ); // true
+  Object.is( b, -0 ); // true
+  Object.is( b, 0 ); // false
+  ```
+
+- 이전 환경 폴리필
+
+  ```javascript
+  if (!Object.is) {
+      Object.is = function(v1, v2) {
+          // -0 테스트
+          if (v1 === 0 && v2 === 0) {
+              return 1 / v1 === 1 / v2;
+          }
+          // NaN 테스트
+          if (v1 !== v1) {
+              return v2 !== v2;
+          }
+          // 기타
+          return v1 === v2;
+      };
+  }
+  ```
+
+- == 나 ===가 안전하다면 굳이 `Object.is()`는 사용하지 않는 편이 좋음
+
+- `Object.is()`는 주로 특이한 동등 비교에 씀
+
+### 2.5 값 vs 레퍼런스
+
