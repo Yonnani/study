@@ -42,3 +42,18 @@
   이 코드의 실행 결과는 브라우저 마다 다름
 
 - 요지는 new String("abc")은 "abc"를 감싸는 문자열 래퍼를 생성하며 원시 값 "abc"는 아님
+
+### 3.1 내부 [[Class]]
+
+- typeof가 'object'인 값(배열 등)에는 [[Class]]라는 내부 프로퍼티(전통적인 클래스 지향 개념에서의 클래스라기 보단 내부 분류법의 일부)가 추가로 붙음, 이 프로퍼티는 직접 접근할 수 없고 `Object.prototype.toString()`라는 메서드에 값을 넣어 호출함으로써 존재를 엿볼 수 있음
+
+  ```javascript
+  Object.prototype.toString.call( [1,2,3] );
+  // "[object Array]"
+
+  Object.prototype.toString.call( /regex-literal/i );
+  // "[Object RegExp]"
+  ```
+
+  ​
+
