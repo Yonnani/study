@@ -55,5 +55,33 @@
   // "[Object RegExp]"
   ```
 
-  ​
+  - 내부 [[Class]] 값이, 배열은 "Array", 정규식은 "RegExp"임
+
+- 원시 값에도 내부 [[Class]]가 있을까
+
+  ```javascript
+  Object.prototype.toString.call( null );
+  // "[object Null]"
+
+  Object.prototype.toString.call( undefined );
+  // "[object Undefined]"
+  ```
+
+  - 내부 [[Class]] 값을 확인해보니 "Null", "Undefined" 임
+
+- 하지만 그 밖의 문자열, 숫자, 불리언 같은 단순 원시 값은 '박싱(Boxing)' 과정을 거침
+
+  ```javascript
+  Object.prototype.toString.call( "abc" );
+  // "[object String]"
+  Object.prototype.toString.call( 42 );
+  // "[object Number]"
+  Object.prototype.toString.call( true );
+  // "[object Boolean]"
+  ```
+
+  - 내부 [[Class]] 값이 각각 String, Number, Boolean으로 표시된 것으로 보아 단순 원시 값은 해당 객체 래퍼로 자동 박싱됨을 알 수 있음
+
+
+### 3.2 래퍼 박싱하기
 
