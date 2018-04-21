@@ -85,3 +85,74 @@
 
 ### 3.2 래퍼 박싱하기
 
+- 원시 값에는 프로퍼티나 메서드가 없으므로 .length, .toString()으로 접근하려면 원시 값을 객체 래퍼로 감싸줘야 함
+
+- 자바스크립트는 원시 값을 알아서 박싱(래핑)함
+
+  ```javascript
+  var a = "abc";
+
+  a.length; // 3
+  a.toUpperCase(); // "ABC"
+  ```
+
+- 객체 형태로 써야 할 이유는 거의 없음, 필요시 엔진이 알아서 암시적으로 박싱하게 하는 것이 좋음
+
+#### 3.2.1 객체 래퍼의 함정
+
+- 주의점
+
+  ```javascript
+  var a = new Boolean( false );
+
+  if (!a) {
+      console.log( "Oops" ); // 실행되지 않음
+  }
+  ```
+
+  false를 객체 래퍼로 감쌌지만 문제는 객체가 'truthy'라는 점임
+
+- 수동으로 원시 값을 박싱하려면 `Object()` 함수를 이용(앞에 new 키워드는 없음)
+
+  ```javascript
+  var a = "abc";
+  var b = new String( a );
+  var c = Object( a );
+
+  typeof a; // "string"
+  typeof b; // "object"
+  typeof c; // "object"
+
+  b instanceof String; // true
+  c instanceof String; // true
+
+  Object.prototype.toString.call( b ); // "[object String]"
+  Object.prototype.toString.call( c ); // "[object String]"
+  ```
+
+### 3.3 언박싱
+
+- 객체 래퍼의 원시 값은 `valueOf()` 메서드로 추출함
+
+  ```javascript
+  var a = new String( "abc" );
+  var b = new Number( 42 );
+  var c = new Boolean( true );
+
+  a.valueOf(); // "abc"
+  b.valueOf(); // 42
+  c.valueOf(); // true
+  ```
+
+  이때에도 암시적인 언박싱이 일어남
+
+  ```javascript
+  var a = new String( "abc" );
+  var b = a + ""; // 'b'에는 언박싱된 원시 값 "abc"이 대입됨
+
+  typeof a; // "object"
+  typeof b; // "string"
+  ```
+
+### 3.4 네이티브, 나는 생성자다
+
