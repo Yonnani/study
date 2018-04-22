@@ -156,3 +156,94 @@
 
 ### 3.4 네이티브, 나는 생성자다
 
+- 배열, 객체, 함수, 정규식 값은 리터럴 형태로 생성하는 것이 일반적이지만, 리터럴은 생성자 형식으로 만든 것과 동일한 종류의 객체를 생성함
+- 생성자는 가급적 쓰지 않는 편이 좋음
+
+#### 3.4.1 Array()
+
+```javascript
+var a = new Array( 1, 2, 3 );
+a; // [1, 2, 3]
+
+var b = [1, 2, 3];
+b; // [1, 2, 3]
+```
+
+> Array() 생성자 앞에 new를 붙이지 않아도 됨
+>
+> Array(1, 2, 3)와 new Array(1, 2, 3)은 결과적으로 같음
+
+- Array 생성자에서 인자로 숫자를 하나만 받으면 그 숫자를 원소로 하는 배열을 생성하는 게 아니라 '배열의 크기를 미리 정하는(Presize)' 기능임
+
+  - 배열의 크기를 정하려면 빈 배열을 만들고 나중에 length 프로퍼티에 숫자 값을 할당하면 됨
+  - 실제로 슬롯에 값은 없지만 length만 보면 뭔가 값이 있을 것 같은 이상한 배열은 권장되지 않음
+  - '빈 슬롯'을 한 군데 이상 가진 배열을 `구멍난 배열(Sparse Array)`이라고 함
+
+- 브라우저 개발자 콘솔 창마다 객체를 나타내는 방식이 제각각임
+
+  ```javascript
+  var a = new Array( 3 );
+  var b = [ undefined, undefined, undefined ];
+  var c = [];
+  c.length = 3;
+
+  a;
+  b;
+  c;
+  ```
+
+  - 현재 크롬에서 b는 `[undefined, undefined, undefined]`로 출력되는 반면, a와 c는 `[empty × 3]`라고 표시 됨
+
+- a와 b가 어떨 때는 같은 값처럼 보이다가도 그렇지 않을 때도 있음
+
+  ```javascript
+  var a = new Array( 3 );
+  var b = [ undefined, undefined, undefined ];
+
+  a.join("-"); // "--"
+  b.join("-"); // "--"
+
+  a.map(function(v, i){ return i; }); // [empty × 3]
+  b.map(function(v, i){ return i; }); // [0, 1, 2]
+  ```
+
+  - a.map()은 a에 슬롯이 없기 때문에 map() 함수가 순회할 원소가 없음
+
+  - join()은 다름
+
+    ```javascript
+    function fakeJoin(arr, connector) {
+        var str = "";
+        for (var i = 0; i < arr.length; i++) {
+            if (i > 0) {
+                str += connector;
+            }
+            if (arr[i] !== undefined) {
+                str += arr[i];
+            }
+        }
+        return str;
+    }
+
+    var a = new Array( 3 );
+    fakeJoin( a, "-" ); // "--"
+    ```
+
+  - join()은 슬롯이 있다는 가정하에 length만큼 루프를 반복하지만, map() 함수는 이런 가정을 하지 않기 때문에 이상한 '빈 슬롯' 배열이 입력되면 예기치 않은 결과 생길 수도 있음
+
+- 빈 슬롯이 아닌 진짜 undefined 값 원소로 채워진 배열 생성 방법
+
+  ```javascript
+  var a = Array.apply( null, { length: 3 } );
+  a; // [ undefined, undefined, undefined ]
+  ```
+
+  - `apply()`는 모든 함수에서 사용 가능한 유틸리티
+  - 첫 번째 인자 this는 객체 바인딩(Object Binding)으로 일단 여기서는 null로 셋팅
+  - 두 번째 인자는 인자의 배열(또는 배열 비슷한 '유사 배열')로, 이 안에 포함된 원소들이 '펼쳐져(Spread)' 함수의 인자로 전달됨
+  - 즉, `Array.apply()`는 Array() 함수를 호출하는 동시에 `{ length: 3 }` 객체 값을 펼쳐 인자로 넣음
+
+- 결론은, 빈 슬롯 배열을 애써 만들지 말자!
+
+#### 3.4.2 Object(), Function(), and RegExp()
+
