@@ -247,3 +247,78 @@ b; // [1, 2, 3]
 
 #### 3.4.2 Object(), Function(), and RegExp()
 
+- Object()/Function()/RegExp() 생성자도 선택 사항임
+
+  ```javascript
+  var c = new Object();
+  c.foo = "bar";
+  c; // { foo: "bar" }
+
+  var d = { foo: "bar" };
+  d; // { foo: "bar" }
+
+  var e = new Function( "a", "return a * 2;" );
+  var f = function(a) { return a * 2; }
+  function g(a) { return a * 2; }
+
+  var h = new RegExp( "^a*b+", "g" );
+  var i = /^a*b+/g;
+  ```
+
+  - new Object() 같은 생성자 폼은 사용할 일이 거의 없음
+
+  - Function 생성자는 함수의 인자나 내용을 동적으로 정의해야 하는, 매우 드문 경우에 한해 유용함
+
+  - 정규 표현식은 리터럴 형식(/^a*b+/g)으로 정의할 것을 권장함 
+
+    - 구문이 쉽고 성능상 이점(자바스크립트 엔진이 실행 전 정규 표현식을 미리 컴파일한 후 캐시함)이 있음
+
+    - `RegExp()`는 정규 표현식 패턴을 동적으로 정의할 경우 의미있는 유틸리티임
+
+      ```javascript
+      var name = "Kyle";
+      var namePattern = new RegExp( "\\b(?:" + name + ")+\\b", "ig");
+
+      var matches = someText.match( namePattern );
+      ```
+
+      `new RegExp("패턴","플래그")` 형식으로 사용하자
+
+#### 3.4.3 Date() and Error()
+
+- 네이티브 생성자 `Date()`와 `Error()`는 리터럴 형식이 없으므로 다른 네이티브에 비해 유용함
+
+- date 객체 값은 `new Date()`로 생성함 : 날짜/시각을 인자로 받고 인자 생략하면 현재 날짜/시각으로 대신함
+
+- date 객체의 인스턴스로부터 getTime()을 호출할 수 있지만 ES5에 정의된 정적 도우미 함수(Helper Function), `Date.now()` 를 사용하는 것이 더 쉬움
+
+  - 폴리필
+
+    ```javascript
+    if (!Date.now) {
+        Date.now = function(){
+            return (new Date()).getTime();
+        };
+    }
+    ```
+
+- `Error()` 생성자는 앞에 new가 있든 없든 같은 결과임
+
+- error 객체의 주 용도는 현재 실행 스택 콘텍스트(Execution Stack Context)를 포착하여 객체에 담는 것임
+
+- error 객체는 보통 throw 연산자와 함께 사용함
+
+  ```javascript
+  function foo(x) {
+      if (!x) {
+          throw new Error( "x를 안 주셨어요!" );
+      }
+      // ...
+  }
+  ```
+
+- 사람이 읽기 편한 포맷의 에러 메세지를 보려면 Error 객체의 `toString()` 호출하는 것이 좋음
+
+- 일반적인 Error() 네이티브 이외에도 구체적인 에러 타입에 특화된 네이티브들이 있음
+
+  - `EvalError()`, `RangeError()`,` ReferenceError()`, `SyntaxError()`, `TypeError()`, `URIError()` 테이티브들은 코드에서 실제로 예외가 발생하면 자동으로 던져지므로 직접 사용할 일은 거의 없음
