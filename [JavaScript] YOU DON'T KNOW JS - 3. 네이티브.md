@@ -322,3 +322,33 @@ b; // [1, 2, 3]
 - 일반적인 Error() 네이티브 이외에도 구체적인 에러 타입에 특화된 네이티브들이 있음
 
   - `EvalError()`, `RangeError()`,` ReferenceError()`, `SyntaxError()`, `TypeError()`, `URIError()` 테이티브들은 코드에서 실제로 예외가 발생하면 자동으로 던져지므로 직접 사용할 일은 거의 없음
+
+#### 3.4.4 Symbol()
+
+- 심벌(Symbol)은 ES6에서 처음 선보인, 새로운 원시 값 타입
+
+- 심벌은 충돌 염려 없이 객체 프로퍼티로 사용 가능한, 특별한 '유일 값'임(절대적으로 유일함이 보장되지는 않음)
+
+- ES6에 미리 정의된 심벌이 있음 : `Symbol.create`, `Symbol.iterator` 식으로 Symbol 함수 객체의 정적 프로퍼티로 접근함
+
+  ```javascript
+  var mysym = Symbol( "my own symbol" );
+  mysym; // Symbol(my own symbol)
+  mysym.toString(); // "Symbol(my own symbol)"
+  typeof mysym; // "symbol"
+
+  var a = {};
+  a[mysym] = "foobar";
+
+  Object.getOwnPropertySymbols( a );
+  // [ Symbol(my own sym) ]
+  ```
+
+- 심벌은 전용(Private) 프로퍼티는 아니지만(Object.getOwnPropertySymbols()로 들여다보면 공용(Public) 프로퍼티임을 알 수 있음), 본래의 사용 목적에 맞게 대부분 전용 혹은 특별한 프로퍼티로 사용함
+
+- 지금까지 "전용/특수/내부 프로퍼티입니다. 건드리지 마세요!"라고 하고 싶을 때 습관적으로 써 왔던, 언더스코어(_)가 앞에 붙은 프로퍼티 명도 언젠가는 심벌에 의해 대체될 가능성이 높음
+
+- 심벌은 객체가 아님, 단순한 스칼라 원시 값임
+
+#### 3.4.5 네이티브 프로토타입
+
