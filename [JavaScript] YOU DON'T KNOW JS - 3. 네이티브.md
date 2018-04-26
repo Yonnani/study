@@ -352,3 +352,37 @@ b; // [1, 2, 3]
 
 #### 3.4.5 네이티브 프로토타입
 
+- 내장 네이티브 생성자는 각자의 `.prototype` 객체를 가짐 (예: Array.prototype, String.prototype 등)
+
+- prototype 객체에는 해당 객체의 하위 타입별로 고유한 로직이 있음
+
+  > 문서화 관례에 따라 String.prototype.XYZ는 String#XYZ로 줄여 씀
+  >
+  > - String#indexOf() 문자열에서 특정 문자의 위치를 검색
+  > - String#charAt() 문자열에서 특정 위치의 문자를 반환
+  > - String#substr(), String#substring(), and String#slice() 문자열 일부를 새로운 문자열로 추출
+  > - String#toUpperCase() and String#toLowerCase() 대문자/소문자로 변환된 새로운 문자열 생성
+  > - String#trim() 앞/뒤의 공란이 제거된 새로운 문자열 생성
+
+  - 이 중 문자열 값을 변경하는 메서드는 없음
+
+- 프로토타입 위임(Prototype Delegation) 덕분에 모든 문자열이 이 메서드를 같이 쓸 수 있음
+
+  ```javascript
+  var a = " abc ";
+
+  a.indexOf( "c" ); // 3
+  a.toUpperCase(); // " ABC "
+  a.trim(); // "abc"
+  ```
+
+- ```javascript
+  typeof Function.prototype; // "function"
+  Function.prototype(); // 빈 함수
+
+  RegExp.prototype.toString(); // "/(?:)/" - 빈 regex
+  "abc".match( RegExp.prototype ); // [""]
+  ```
+
+  ​
+
