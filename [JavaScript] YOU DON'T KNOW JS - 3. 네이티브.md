@@ -384,5 +384,53 @@ b; // [1, 2, 3]
   "abc".match( RegExp.prototype ); // [""]
   ```
 
-  ​
+- 네이티브 프로토타입을 변경할 수도 있지만 바람직하지 않음
 
+  ```javascript
+  Array.isArray( Array.prototype ); // true
+  Array.prototype.push( 1, 2, 3 ); // 3
+  Array.prototype; // [1,2,3]
+
+  // 이런 식으로 놔두면 이상하게 작동할 수 있음
+  // 다음 코드는 'Array.prototype'을 지워버림
+  Array.prototype.length = 0;
+  ```
+
+
+##### 프로토타입은 디폴트다
+
+- 변수에 적절한 타입의 값이 할당되지 않은 상태에서 `Function.prototype → 빈 함수`, `RegExp.prototype → '빈(아무것도 매칭 하지 않는)' 정규식`, `Array.prototype → 빈 배열`은 '디폴트 값'임
+
+  ```javascript
+  function isThisCool(vals, fn, rx) {
+      vals = vals || Array.prototype;
+      fn = fn || Function.prototype;
+      rx = rx || RegExp.prototype;
+      
+      return rx.text(
+          vals.map( fn ).join( '' )
+      );
+  }
+
+  isThisCool(); // true (??? true 아님, 에러남 : VM286:6 Uncaught TypeError: Method RegExp.prototype.exec called on incompatible receiver)
+  isThisCool(
+      ["a","b","c"],
+      function(v){ return v.toUpperCase(); },
+      /D/
+  ); // false
+  ```
+
+  > ES6부터는 `vals = vals || 디폴트 값`식의 구문 트릭은 필요 없음
+  >
+  > - 왜냐하면 함수 선언부에서 네이티브 구문을 통해 인자의 디폴트 값을 설정할 수 있기 때문
+
+- 프로토타입으로 디폴트 값 셋팅 시 이점
+
+  - `.prototypes`는 이미 생성되어 내장된 상태이므로 단 한 번만 생성됨
+  - 그러나 [], function() {}, /(?:)/를 디폴트 값으로 사용하면 isThisCool()를 호출할 때마다 디폴트 값을 다시 생성하므로 그만큼 메모리/CPU가 낭비됨
+
+### 3.5 정리하기
+
+- 자바스크립트는 원시 값을 감싸는 객체 래퍼, 즉 네이티브(String, Number, Boolean 등)를 제공함
+- 객체 래퍼에는 타입별로 기능이 구현되어 있어 편리하게 사용 가능
+- 단순 스칼라 원시 값의 length 프로퍼티나 prototype에 정의된 메서드를 호출하면 자동으로 원시 값을 '박싱'(해당되는 객체 래퍼로 감싼다)함
