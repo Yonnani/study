@@ -48,14 +48,92 @@ var c = String( a ); // 명시적 강제변환
 
 - 배열은 재정의된 `toString()`이 있음
 
-  ```javascript
   var a = [1,2,3];
   a.toString(); // "1,2,3"
-  ```
 
 - `toString()` 메서드는 명시적으로 호출 가능, 문자열 콘텍스트에서 문자열 아닌 값이 있을 경우에도 자동 호출됨(???)
 
 ##### JSON 문자열화
 
+- 대부분 단순 값들은 직렬화 결과가 반드시 문자열이라는 점을 제외하고는, JSON 문자열화나 toString() 변환이나 기본적으로 같은 로직임
+
+  ```javascript
+  JSON.stringify( 42 ); // "42"
+  JSON.stringify( "42" ); // ""42""
+  JSON.stringify( null ); // "null"
+  JSON.stringify( true ); // "true"
+  ```
+
+- JSON 안전 값(JSON-Safe Value)(JSON 표현형으로 확실히 나타낼 수 있는 값)은 모두 `JSON.stringify()`로 문자열화할 수 있음
+
+- `JSON.stringify()`는 인자가 undefined, 함수, 심벌 값이면 자동으로 누락시키며 이런 값들이 배열에 포함되어 있으면 null로 바꿈, 객체 프로퍼티에 있으면 지워버림
+
+  ```javascript
+  JSON.stringify( undefined ); // undefined
+  JSON.stringify( function(){} ); // undefined
+
+  JSON.stringify( [1,undefined,function(){},4] ); // "[1,null,null,4]"
+  JSON.stringify( {a:2, b:function(){}} ); // "{"a":2}"
+  ```
+
+- JSON.stringify()에 환형 참조(Circular References) 객체(프로퍼티 참조가 무한 순환되는 구조의 객체)를 넘기면 에러남
+
+- 객체 자체에 `toJSON()` 메서드가 정의되어 있다면, 먼저 이 메서드를 호출하여 직렬화한 값을 반환함
+
+- 부적절한 JSON 값이나 직렬화하기 곤란한 객체 값을 문자열화하려면 `toJSON()` 메서드를 따로 정의해야 함
+
+  ```javascript
+  var o = {};
+
+  var a = {
+      b: 42,
+      c: o,
+      d: function(){}
+  };
+
+  // 'a'를 환형 참조 객체로 만듦
+  o.e = a;
+
+  // 환형 참조 객체는 JSON 문자열화 시 에러 남
+  // JSON.stringify( a );
+
+  // JSON 값으로 직렬화하는 함수를 따로 정의함
+  a.toJSON = function(){
+      // 직렬화에 프로퍼티 'b'만 포함시킴
+      return { b: this.b };
+  };
+
+  JSON.stringify( a ); // "{"b":42}"
+  ```
+
+- `toJSON()`은 (어떤 타입이든) 적절히 평범한 실제 값을 반환하고 문자열화 처리는 `JSON.stringify()`가 담당함
+
+  ```javascript
+  var a = {
+      val: [1,2,3],
+      
+      // 맞다!
+      toJSON: function(){
+          return this.val.slice( 1 );
+      }
+  };
+
+  var b = {
+      val: [1,2,3],
+      // 틀리다!
+      toJSON: function(){
+          return "[" +
+              this.val.slice( 1 ).join() + 
+              "]";
+      }
+  };
+
+  JSON.stringify( a ); // "[2,3]"
+  JSON.stringify( b ); // ""[2,3]""
+  ```
+
+  - 두 번째 호출 코드는 배열 자체가 아니라 반환된 문자열을 다시 문자열화 함
+
+- 배열 아니면 함수 형태의 대체자(Replacer)를 `JSON.stringify()`의 두 번째 선택 인자로 지정하여 객체를 재귀적으로 직렬화하면서 (포함할 프로퍼티와 제외할 퍼로퍼티를 결정하는) 필터링 하는 방법이 있음
 
 
