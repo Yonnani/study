@@ -71,7 +71,7 @@ var c = String( a ); // 명시적 강제변환
   ```javascript
   JSON.stringify( undefined ); // undefined
   JSON.stringify( function(){} ); // undefined
-
+  
   JSON.stringify( [1,undefined,function(){},4] ); // "[1,null,null,4]"
   JSON.stringify( {a:2, b:function(){}} ); // "{"a":2}"
   ```
@@ -84,25 +84,25 @@ var c = String( a ); // 명시적 강제변환
 
   ```javascript
   var o = {};
-
+  
   var a = {
       b: 42,
       c: o,
       d: function(){}
   };
-
+  
   // 'a'를 환형 참조 객체로 만듦
   o.e = a;
-
+  
   // 환형 참조 객체는 JSON 문자열화 시 에러 남
   // JSON.stringify( a );
-
+  
   // JSON 값으로 직렬화하는 함수를 따로 정의함
   a.toJSON = function(){
       // 직렬화에 프로퍼티 'b'만 포함시킴
       return { b: this.b };
   };
-
+  
   JSON.stringify( a ); // "{"b":42}"
   ```
 
@@ -117,7 +117,7 @@ var c = String( a ); // 명시적 강제변환
           return this.val.slice( 1 );
       }
   };
-
+  
   var b = {
       val: [1,2,3],
       // 틀리다!
@@ -127,7 +127,7 @@ var c = String( a ); // 명시적 강제변환
               "]";
       }
   };
-
+  
   JSON.stringify( a ); // "[2,3]"
   JSON.stringify( b ); // ""[2,3]""
   ```
@@ -136,4 +136,58 @@ var c = String( a ); // 명시적 강제변환
 
 - 배열 아니면 함수 형태의 대체자(Replacer)를 `JSON.stringify()`의 두 번째 선택 인자로 지정하여 객체를 재귀적으로 직렬화하면서 (포함할 프로퍼티와 제외할 퍼로퍼티를 결정하는) 필터링 하는 방법이 있음
 
+  - 대체자가 배열이면 전체 원소는 문자열이어야 하고 각 원소는 객체 직렬화의 대상 프로퍼티명임
 
+  - 대체자가 함수면 처음 한 번은 객체 자신에 대해, 그 다음엔 각 객체 프로퍼티별로 한 번씩 실행하면서 매번 키와 값 두 인자를 전달함, 직렬화 과정에서 해당 키를 건너뛰려면 undefined를, 그 외에는 해당 값을 반환함
+
+    ```javascript
+    var a = {
+        b: 42,
+        c: "42",
+        d: [1,2,3]
+    };
+    
+    JSON.stringify( a, ["b","c"] ); // "{"b":42,"c":"42"}"
+    JSON.stringify( a, function(k, v) {
+      if (k !== "c") return v;  
+    } ); // "{"b":42,"d":[1,2,3]}"
+    ```
+
+- `JSON.stringify()` 세 번째 선택 인자는 스페이스(Space)라고 하며 사람이 읽기 쉽도록 들여쓰기를 할 수 있음
+
+  - 들여 쓰기를 할 빈 공간의 개수를 숫자로 지정하거나 문자열(10자 이상이면 앞에서 10자까지만 잘라 사용함)을 지정하여 각 들여 쓰기 수준에 사용함
+
+  ```javascript
+  var a = {
+      b: 42,
+      c: "42",
+      d: [1,2,3]
+  };
+  
+  JSON.stringify(a, null, 3);
+  //"{
+  //   "b": 42,
+  //   "c": "42",
+  //   "d": [
+  //      1,
+  //      2,
+  //      3
+  //   ]
+  //}"
+  
+  JSON.stringify(a, null, "-----");
+  //"{
+  //-----"b": 42,
+  //-----"c": "42",
+  //-----"d": [
+  //----------1,
+  //----------2,
+  //----------3
+  //-----]
+  //}"
+  ```
+
+- `JSON.stringify()`은 직접적인 강제변환의 형식은 아니지만 두 가지 이유로 ToString 강제 변환과 연관됨
+
+  1. 문자열, 숫자, 불리언, null 값이 JSON으로 문자열화하는 방식은 ToString 추상연산의 규칙에 따라 문자열 값으로 강제변환되는 방식과 동일함
+  2. `JSON.stringify()`에 전달한 객체가 자체 `toJSON()`메서드를 갖고 있다면, 문자열화 전 `toJSON()`가 자동 호출되어 JSON 안전 값으로 '강제변환'됨
