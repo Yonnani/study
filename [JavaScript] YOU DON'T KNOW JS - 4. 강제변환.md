@@ -191,3 +191,50 @@ var c = String( a ); // 명시적 강제변환
 
   1. 문자열, 숫자, 불리언, null 값이 JSON으로 문자열화하는 방식은 ToString 추상연산의 규칙에 따라 문자열 값으로 강제변환되는 방식과 동일함
   2. `JSON.stringify()`에 전달한 객체가 자체 `toJSON()`메서드를 갖고 있다면, 문자열화 전 `toJSON()`가 자동 호출되어 JSON 안전 값으로 '강제변환'됨
+
+##### 4.2.2 ToNumber
+
+- `숫자 아닌 값 > 수식 연산이 가능한 숫자` 변환 로직은 ES5 9.3 ToNumber 추상 연산에 정의되어 있음
+
+  - true는 1, false는 0, undefined는 NaN, null은 0으로 바뀜
+
+- 문자열 값에 ToNumber를 적용하면 대부분 숫자 리터럴 규칙/구문과 비슷하게 작동함
+
+  변환이 실패하면 결과는 NaN임
+
+  한가지 차이는 0이 앞에 붙은 8진수는 ToNumber에서 올바른 숫자 리터럴이라도 8진수로 처리하지 않음(대신 일반 10진수로 처리함)
+
+- 객체(그리고 배열)는 동등한 원시 값으로 변환 후 그 결괏값(아직 숫자가 아닌 원시 값)을 앞서 설명한 ToNumber 규칙에 의해 강제변환함
+
+  그렇지 않을 경우 (toString() 메서드가 존재하면) `toString()`을 이용하여 강제변환 함
+
+- 어찌해도 원시 값으로 바꿀 수 없을 때는 TypeError
+
+- ES5부터는 [[Prototype]]이 null인 경우 대부분 `Object.create(null)`를 이용하여 강제변환이 불가능한 객체(valueOf(), toString() 메서드가 없는 객체)를 생성할 수 있음
+
+```javascript
+var a = {
+    valueOf: function(){
+        return "42";
+    }
+};
+
+var b = {
+    toString: function(){
+        return "42";
+    }
+};
+
+var c = [4,2];
+c.toString = function(){
+    return this.join( "" ); // "42"
+};
+
+Number( a ); // 42
+Number( b ); // 42
+Number( c ); // 42
+Number( '' ); // 0
+Number( [] ); // 0
+Number( [ "abc" ] ); // NaN
+```
+
