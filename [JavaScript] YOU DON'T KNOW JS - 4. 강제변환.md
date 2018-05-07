@@ -238,3 +238,65 @@ Number( [] ); // 0
 Number( [ "abc" ] ); // NaN
 ```
 
+##### 4.2.3 ToBoolean
+
+- 자바스크립트에서 1과 0 그리고 true, false는 별개임
+- 1을 true로, 0을 false로 강제변환할 수는 있짐나 두 값이 같지는 않음
+
+###### Falsy 값
+
+- 자바스크립트의 모든 값은 다음 둘 중 하나임
+  1. 불리언으로 강제변환하면 `false`가 되는 값
+  2. 1번을 제외한 나머지(즉, 명백히 `true`인 값)
+- 명세가 정의한 `falsy`값 (불리언으로 강제변환하면 false)
+  - undefined
+  - null
+  - false
+  - +0, -0, NaN
+  - ""
+- `falsy` 값 목록에 없으면 `truthy` 값이 됨
+
+###### Falsy 객체
+
+```javascript
+var a = new Boolean( false );
+var b = new Number( 0 );
+var c = new String( "" );
+
+var d = Boolean( a && b && c );
+
+d; // true
+```
+
+- `falsy 객체`는 불리언으로 강제변환하면 `false`임
+- `document.all` 은 DOM에서 사용했던 유사 배열(객체)이며 실제로 `truthy`한 일반 객체처럼 작동했음
+  - `document.all`은 '비표준'이며 비권장/폐기 됨
+  - 하지만 레거시 코드 베이스가 많음
+- 구 IE 브라우저 때문에 비표준('falsy 객체')이 자바스크립트에 더해진 것임
+
+###### truthy 값
+
+- falsy 값 목록에 없으면 무조건 truthy 값임
+
+  ```javascript
+  var a = "false";
+  var b = "0";
+  var c = "''";
+  
+  var d = Boolean( a && b && c );
+  d; // true
+  ```
+
+  ```javascript
+  var a = []; // 빈 배열
+  var b = {}; // 빈 객체
+  var c = function(){}; // 빈 함수
+  
+  var d = Boolean( a && b && c );
+  d; // true
+  ```
+
+- truthy/falsy 개념은 어떤 값을 불리언 타입으로 (명시적/암시적) 강제변환 시 해당 값의 작동 방식을 이해한다는 점에서 중요함
+
+#### 4.3 명시적 강제변환
+
