@@ -357,3 +357,48 @@ d; // true
 
 - 가급적 +/- 단항 연산자를 다른 연산자와 인접하지 말자
 
+###### 날짜 → 숫자
+
+- `+` 단항 연산자는 `Date 객체 → 숫자` 강제변환 용도로 쓰임
+
+  - 결괏값이 날짜/시각 값을 유닉스 타임스탬프 표현형(1970년 1월 1일 00:00:00 UTC 이후로 경과한 시간을 밀리 초 단위로 표시) 이기 때문
+
+    ```javascript
+    var d = new Date( "Mon, 18 Aug 2014 08:53:06 CDT" );
+    +d; // 1408369986000
+    ```
+
+- 현재 시각을 타임스탬프로 바꿀 때 관용적으로 사용하는 방법
+
+  ```javascript
+  var timestamp = +new Date();
+  ```
+
+- 강제변환을 하지 않아도 Date 객체로부터 타임스탬프를 얻는 방법이 있으며, 오히려 더 명시적임
+
+  ```javascript
+  var timestamp = new Date().getTime();
+  // var timestamp = (new Date()).getTime();
+  // var timestamp = (new Date).getTime();
+  ```
+
+- 하지만 ES5에 추가된 정적 함수 `Date.now()`를 쓰는 것이 더 나음
+
+  ```javascript
+  var timestamp = Date.now();
+  ```
+
+  - `Date.now()`의 폴리필
+
+    ```javascript
+    if (!Date.now) {
+        Date.now = function () {
+          return +new Date();  
+        };
+    }
+    ```
+
+- 현재 타임스탬프는 `Date.now()`로, 그 외 특정 날짜/시간의 타임스탬프는 `new Date().getTime()`을 대신 쓰도록 하자
+
+###### 이상한 나라의 틸드(~)
+
