@@ -580,12 +580,100 @@ parseInt( b ); // 42
 - 놀랍지만 대단히 합리적인 `parseInt()` 예제 더
 
   ```javascript
-  parseInt( 0.000008 );
-  parseInt( 0.0000008 );
-  parseInt( false, 16 );
-  parseInt( parseInt, 16 );
-  parseInt( "0x10" );
-  parseInt( "103", 2 );
+  parseInt( 0.000008 ); // 0 ("0.000008" → "0")
+  parseInt( 0.0000008 ); // 8 ("8e-7" → "8")
+  parseInt( false, 16 ); // 250 ("false" → "fa")
+  parseInt( parseInt, 16 ); // 15 ("function..." → "f")
+  parseInt( "0x10" ); // 16
+  parseInt( "103", 2 ); // 2
   ```
 
+##### 4.3.3 명시적 강제변환: * → 불리언
+
+- `Boolean()`은 (ToBoolean 추상 연산에 의한) 명시적인 강제변환 방법임
+
+  ```javascript
+  var a = "0";
+  var b = [];
+  var c = {};
   
+  var d = "";
+  var e = 0;
+  var f = null;
+  var g;
+  
+  Boolean( a ); // true
+  Boolean( b ); // true
+  Boolean( c ); // true
+  
+  Boolean( d ); // false
+  Boolean( e ); // false
+  Boolean( f ); // false
+  Boolean( g ); // false
+  ```
+
+- `!` 부정(Negate) 단항 연산자는 값을 불리언으로 명시적으로 강제변환함
+
+  - 문제는 그 과정에서 truthy, falsy까지 뒤바뀐다는 점임
+
+  - 일반적으로 개발 시 불리언 값으로 명시적으로 강제변환을 할 땐 `!!` 이중부정(double-negate) 연산자를 사용함(두 번째 `!`이 패리티를 다시 원상 복구하기 때문임)
+
+    ```javascript
+    var a = "0";
+    var b = [];
+    var c = {};
+    
+    var d = "";
+    var e = 0;
+    var f = null;
+    var g;
+    
+    !!a; // true
+    !!b; // true
+    !!c; // true
+    
+    !!d; // false
+    !!e; // false
+    !!f; // false
+    !!g; // false
+    ```
+
+- 이 같은 ToBoolean 강제변환 모두 `Boolean()`이나 `!!`를 쓰지 않으면 if() 문 등의 불리언 콘텍스트에서 암시적인 강제변환이 일어남
+
+- 자료 구조의 JSON 직렬화 시 `true/false` 값으로 강제변환하는 것도 명시적인 ToBoolean 강제변환의 일례임
+
+  ```javascript
+  var a = [
+      1,
+      function(){ /* ... */ },
+      2,
+      function(){ /* ... */ }
+  ];
+  
+  JSON.stringify( a ); // "[1,null,2,null]"
+  
+  JSON.stringify( a, function(key,val) {
+      if (typeof val == "function")  {
+          // 함수를 'ToBoolean' 강제변환함
+          return !!val;
+      } else {
+          return val;
+      }
+  });
+  // "[1,true,2,true]"
+  ```
+
+- 삼항 연산자 `? :`는 표현식의 평가 결과에 따라 true 또는 false를 반환함
+
+  ```javascript
+  var a = 42;
+  var b = a ? true : false;
+  ```
+
+  - 암시적 강제변환이 매복해 있음
+  - a를 불리언으로 강제변환해야 표현식 전체의 true/false 여부를 따져볼 수 있음
+  - 이런 코드를 '명시적으로 암시적(Explicitly Implicit)'이라 했는데, 이런 코드는 쓰지 말자.
+  - `Boolean( a )`나 `!!a` 같은 명시적 강제변환이 훨씬 좋음
+
+#### 4.4 암시적 변환
+
