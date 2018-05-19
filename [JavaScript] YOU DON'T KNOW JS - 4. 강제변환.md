@@ -709,5 +709,126 @@ parseInt( b ); // 42
   - 피연산자 a, b 모두 문자열이 아니지만 둘 다 문자열로 강제변환된 후 접합됐음
   - `+` 알고리즘은 한쪽 피연산자가 문자열이거나 다음 과정을 통해 문자열 표현형으로 나타낼 수 있으면 문자열 붙이기를 함
   - 따라서 피연산자 중 하나가 객체(배열 포함)라면, 이 값에 ToPrimitive 추상 연산을 수행하고 다시 ToPrimitive는 number 콘텍스트 힌트를 넘겨 [[DefaultValue]] 알고리즘을 호출함
-  - 
+  - `+` 연산의 한쪽 피연산자가 문자열이면(또는 좀 전과 같이 어떤 과정을 거쳐 문자열이 되면) `+`는 문자열 붙이기 연산을 함
+  - 강제변환 함정 : `[] + {}` 대 `{} + []`의 연산 결과는 각각 `[object Object]`와 `0`임
+
+- 숫자는 공백 문자열 ""와 더하면 간단히 문자열로 강제변환됨
+
+  ```javascript
+  var a = 42;
+  var b = a + '';
+  
+  b;
+  ```
+
+  - 숫자 덧셈 `+`는 가환적(Commutative)이므로 `2 + 3`과 `3 + 2`는 결과가 같음
+  - 문자열 연결 `+`는 대부분 가환적이지 않지만 ""는 특수한 경우라 가환적임
+  - 따라서 `a + ""`와 `"" + a`는 결과가 같음
+
+- 명시적 강제변환 `String(a)`에 비해 암시적 강제변환 `a + ""`에서는 한 가지 유의해야 할 기벽이 있음
+
+  - ToPrimitive 연산 과정에서 `a + ""`는 a 값을 `valueOf()` 메서드에 전달하여 호출하고, 그 결괏값은 ToString 추상 연산을 하여 최종적인 문자열로 변환됨
+
+  - 그러나 `String(a)`는 `toString()`을 직접 호출할 뿐임
+
+    ```javascript
+    var a = {
+        valueOf: function() { return 42; },
+        toString: function() { return 4; }
+    };
+    
+    a + ''; // "42"
+    
+    String( a ); // "4"
+    ```
+
+- `문자열 → 숫자` 암시적인 강제변환
+
+  ```javascript
+  var a = "3.14";
+  var b = a - 0;
+  
+  b; // 3.14
+  ```
+
+  - `-` 연산자는 숫자 뺄셈 기능이 전부이므로 `a - 0`은 a 값을 숫자로 강제변환 함
+  - `a * 1`이나 `a / 1`의 연산자 역시 숫자 연산만 하므로 마찬가지임
+
+- 객체 값에 `-` 연산을 하면?
+
+  ```javascript
+  var a = [3];
+  var b = [1];
+  
+  a - b; // 2
+  ```
+
+  - 두 배열은 우선 문자열로 강제변환한 뒤(`toString()`로 직렬화) 숫자로 강제변환됨
+  - 그리고 마지막에 `-` 연산을 함
+
+##### 4.4.3 암시적 강제변환: 불리언 → 숫자
+
+- 암시적 강제변환의 효용성은 복잡한 형태의 불리언 로직을 단순한 숫자 덧셈 형태로 단순화할 때 빛을 발함
+
+  ```javascript
+  function onlyOne(a, b, c) {
+      return !!((a && !b && !c) ||
+          (!a && b && !c) || (!a && !b && c));
+  }
+  
+  var a = true;
+  var b = false;
+  
+  onlyOne( a, b, b ); // true
+  onlyOne( b, a, b ); // true
+  
+  onlyOne( a, b, a ); // false
+  ```
+
+  - `onlyOne()`는 세 인자 중 정확히 하나만 true/truthy인지 아닌지를 확인하는 함수로 truthy 체크 시 암시적 강제변환을 하고 최종 반환 값을 포함한 다른 부분은 명시적 강제변환을 함
+  - 인자가 늘어날 경우 모든 비교 로직을 조합하여 코드를 구현한다는게 상당히 어려움
+  - 하지만 불리언 값을 숫자(명시적으로 0 또는 1)로 변환하면 쉽게 풀림
+
+  ```javascript
+  function onlyOne() {
+      var sum = 0;
+      for (var i = 0; i < arguments.length; i++) {
+          // falsy 값은 건너 뜀
+          // 0으로 취급하는 셈, 그러나 NaN은 피해야 함
+          if (arguments[i]) {
+              sum += arguments[i];
+          }
+      }
+      return sum == 1;
+  }
+  
+  var a = true;
+  var b = false;
+  
+  onlyOne( b, a ); // true
+  onlyOne( b, a, b, b, b ); // true
+  
+  onlyOne( b, b ); // false
+  onlyOne( b, a, b, b, b, a ); // false
+  ```
+
+  > onlyOne() 함수에서 for 루프 대신 간단히 ES5 reduce() 유틸리티를 써도 됨
+
+  - 다음은 이 코드의 명시적 강제변환 버전임
+
+    ```javascript
+    function onlyOne() {
+        var sum = 0;
+        for (var i = 0; i < arguments.length; i++) {
+            sum += Number( !!arguments[i] );
+        }
+        return sum === 1;
+    }
+    ```
+
+  - `!!arguments[i]`는 불리언 값이 확실하므로 `Number()`로 한 번 더 강제변환하여 0 또는 1로 바꿈
+
+##### 4.4.4 암시적 강제변환: * → 불리언
+
+
 
