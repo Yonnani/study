@@ -921,3 +921,33 @@ foo( "오 마이", "갓!" ); // "오 마이 갓!"
 
 - `&&` 연산자는 개발자가 코딩하기보다는 자바스크립트 압축기(Minifier)에서 더 많이 쓰는 관용 코드임
 
+- `&&` 연산자는 첫 번째 피연산자의 평가 결과가 truthy일 때에만 두 번째 피연산자를 '선택'한다고 했는데 이런 특성을 '가드 연산자(Guard Operator)'라고 함
+
+  ```javascript
+  function foo() {
+      console.log( a );
+  }
+  
+  var a = 42;
+  
+  a && foo(); // 42
+  ```
+
+  - a 평가 결과가 truthy일 때에만 `foo()`가 호출 됨 
+  - 평가 결과가 falsy면 `a && foo()` 표현식은 실행을 멈추고(그래서 '단락 평가(Short Circuiting)'라고 함) foo()는 호출되지 않음
+
+```javascript
+var a = 42;
+var b = null;
+var c = "foo";
+
+if (a && (b || c)) {
+    console.log( "넵" );
+}
+```
+
+- `a && (b || c)` 표현식의 결과는 true가 아닌 "foo"임
+- if 문은 이 "foo"를 불리언 타입으로 강제변환하여 true로 만듦
+
+##### 4.4.6 심벌의 강제변환
+
