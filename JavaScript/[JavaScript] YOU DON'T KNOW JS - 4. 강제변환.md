@@ -1064,3 +1064,42 @@ if (Boolean(a)) {
 
 ###### 비교하기: null → undefined
 
+- null과 undefined 간의 변환은 느슨한 동등 비교 `==`이 암시적 강제변환을 하는 또 다른 예임
+- ES5 11.9.3.2-3 인용
+  1. x가 null이고 y가 undefined면 true를 반환한다.
+  2. x가 undefined이고 y가 null면 true를 반환한다.
+- null과 undefined를 느슨한 동등 비교(==)하면 서로에게 타입을 맞춤(강제변환함)
+
+```javascript
+var a = null;
+var b;
+
+a == b; // true
+a == null; // true
+b == null; // true
+a == false; // false
+b == false; // false
+a == ""; // false
+b == ""; // false
+a == 0; // false
+b == 0; // false
+```
+
+- 'null ↔ undefined' 강제변환은 안전하고 예측 가능하며, 어떤 다른 값도 비교 결과 긍정 오류(False Positive)를 할 가능성이 없음
+
+- null과 undefined를 구분되지 않는 값들로, 결국 동일한 값으로 취급하는 강제변환은 권장하고 싶음
+
+- 예
+
+  ```javascript
+  var a = doSomething();
+  if (a == null) {
+      // ...
+  }
+  ```
+
+  - `a == null`의 평과 결과는 `doSomething()`이 null이나 undefined를 반환할 경우에만 true, 이외의 값이 반환되면 false임
+  - `a == null` 같은 코드는 가독성 좋고 안전하게 작동하는 암시적 강제변환의 일례임
+
+###### 비교하기: 객체 → 비객체
+
