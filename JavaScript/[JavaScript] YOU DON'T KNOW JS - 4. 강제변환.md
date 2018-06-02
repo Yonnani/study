@@ -1074,7 +1074,7 @@ if (Boolean(a)) {
 var a = null;
 var b;
 
-a == b; // true
+a == b;	// true
 a == null; // true
 b == null; // true
 a == false; // false
@@ -1103,3 +1103,9 @@ b == 0; // false
 
 ###### 비교하기: 객체 → 비객체
 
+- 객체/함수/배열과 단순 스칼라 원시 값(문자열, 숫자, 불리언)의 비교는 ES5 11.9.3.8-9에서 다룸
+
+  1. Type(x)가 String 또는 Number고 Type(y)가 객체라면, `x == ToPrimitive(y)`의 비교 결과를 반환한다.
+  2. Type(x)가 Object이고 Type(y)가 String 또는 Number라면, `ToPrimitive(x) == y`의 비교 결과를 반환하다.
+
+  
