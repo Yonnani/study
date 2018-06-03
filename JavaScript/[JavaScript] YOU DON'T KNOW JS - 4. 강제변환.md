@@ -1108,4 +1108,92 @@ b == 0; // false
   1. Type(x)가 String 또는 Number고 Type(y)가 객체라면, `x == ToPrimitive(y)`의 비교 결과를 반환한다.
   2. Type(x)가 Object이고 Type(y)가 String 또는 Number라면, `ToPrimitive(x) == y`의 비교 결과를 반환하다.
 
+
+```javascript
+var a = 42;
+var b = [ 42 ];
+
+a == b; // true
+```
+
+- `[ 42 ]`는 ToPrimitive 추상 연산 결과, "42"가 됨
+- 그리고 `"42" == 42` → `42 == 42`이므로 a, b는 동등함
+
+```javascript
+var a = "abc";
+var b = Object( a );
+
+a === b; // false
+a == b; // true
+```
+
+- b는 ToPrimitive 연산으로 "abc"라는 단순 스칼라 원시 값으로 강제변환되고('언박싱'으로 벗겨지고), 이 값은 a와 동일하므로 `a == b`는 true가 맞음
+
+- 하지만 `==` 알고리즘에서 더 우선하는 규칙이 있어서 그렇지 않은 경우도 있음
+
+  ```javascript
+  var a = null;
+  var b = Object( a ); // 'Object()'와 같음
+  a == b; // false
   
+  var c = undefined;
+  var d = Object( c ); // 'Object()'와 같음
+  c == d; // false
+  
+  var e = NaN;
+  var f = Object( e ); // 'new Number( e )'와 같음
+  e == f; // false
+  ```
+
+  - null과 undefined는 객체 래퍼가 따로 없으므로 박싱할 수 없음
+  - 그래서 `Obejct(null)`는 `Object()`로 해석되어 그냥 일반 객체가 만들어짐
+  - NaN은 해당 객체 래퍼인 Number로 박싱되지만, `==`를 만나 언박싱되면 결국 조건식은 `NaN == NaN`이 되어 (NaN은 자기 자신과도 같지 않으므로) 결과는 false임
+
+##### 4.5.3 희귀 사례
+
+- 가장 골치 아프고 쓰지 말아야 할, 희귀 사례(Corner Cases)
+
+###### 알 박힌 숫자 값
+
+```javascript
+Number.prototype.valueOf = function() {
+    return 3;
+};
+new Number(2) == 3; // true
+```
+
+> `2 == 3` 비교는 이 예와 무관함, 2와 3이 둘 다 이미 원시 숫자 값이고 곧바로 비교가 가능하므로 `Number.prototype.valueOf()` 내장 메서드는 호출되지 않음
+>
+> 그러나 `new Number(2)`는 무조건 ToPrimitive 강제변환 후 `valueOf()`를 호출함
+
+```javascript
+if (a == 2 && a == 3) {
+    // ...
+}
+```
+
+- a가 동시에 2가 되고 3이 되는게 말이 안되지만, '동시에'라는 전제부터 틀림
+
+- 두 표현식 중 `a == 2`가 `a == 3`보다 먼저 평가됨
+
+- `a.valueOf()`에 부수 효과를 주면?
+
+  ```javascript
+  var i = 2;
+  
+  Number.prototype.valueOf = function() {
+      return i++;
+  };
+  
+  var a = new Number( 2 );
+  
+  if (a == 2 && a == 3) {
+      console.log("이런, 정말 되는구만!");
+  }
+  ```
+
+  - 이런 코드는 그 자체로 공해!
+  - 올바르게, 적절하게 강제변환을 이용하자
+
+###### Falsy 비교
+
