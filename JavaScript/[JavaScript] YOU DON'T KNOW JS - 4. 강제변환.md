@@ -1197,3 +1197,36 @@ if (a == 2 && a == 3) {
 
 ###### Falsy 비교
 
+- falsy 값 비교에 관한 희귀 사례 목록
+
+  ```javascript
+  "0" == null; // false
+  "0" == undefined; //false
+  "0" == false; // true -- 어이쿠!
+  "0" == NaN; // false
+  "0" == 0; // true
+  "0" == ""; // false
+  
+  false == null; // false
+  false == undefined; // false
+  false == NaN; // false
+  false == 0; // true -- 어이쿠!
+  false == ""; // true -- 어이쿠!
+  false == []; // true -- 어이쿠!
+  false == {}; // false
+  
+  "" == null; // false
+  "" == undefined; // false
+  "" == NaN; // false
+  "" == 0; // true -- 어이쿠!
+  "" == []; // true -- 어이쿠!
+  "" == {}; // false
+  
+  0 == null; // false
+  0 == undefined; // false
+  0 == NaN; // false
+  0 == []; // true -- 어이쿠!
+  0 == {}; // false
+  ```
+
+  - "어이쿠!"라고 주석을 붙인 7개의 비교는 긍정 오류(False Positive)임
