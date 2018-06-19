@@ -191,7 +191,36 @@
     ```javascript
     function vowels(str) {
         var matches;
+        
+        if (str) {
+            // 모든 모음을 추출함
+            matches = str.match( /[aeiou]/g );
+            
+            if (matches) {
+                return matches;
+            }
+        }
     }
+    
+    vowels( "Hello World" ); // ["e", "o", "o"]
     ```
 
+    위의 코드를 할당 연산자의 부수효과를 활용하면
+
+    ```javascript
+    function vowels(str) {
+        var matches;
+        
+        // 모든 모음을 추출함
+        if (str && (matches = str.match( /[aeiou]/g ))) {
+            return matches;
+        }
+    }
     
+    vowels( "Hello World" ); // ["e", "o", "o"]
+    ```
+
+    필자는 후자를 더 선호함
+
+#### 5.1.3 콘텍스트 규칙
+
