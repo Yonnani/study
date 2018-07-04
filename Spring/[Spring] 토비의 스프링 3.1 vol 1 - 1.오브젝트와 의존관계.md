@@ -145,5 +145,33 @@
 ##### 1.3.3 관계설정 책임의 분리
 
 - UserDao와 UserDao가 사용할 ConnectionMaker의 특정 구현 클래스 사이의 관계를 설정해주는 것에 관한 관심
-- UserDao의 클라이언트 오브젝트가 제3의 관심사항인 UserDao와 Connectionmaker 구현 클래스의 관계를 결정해주는 기능을 분리해서 두기에 적절한 곳임
 
+- UserDao의 클라이언트 오브젝트가 제3의 관심사항인 UserDao와 ConnectionMaker 구현 클래스의 관계를 결정해주는 기능을 분리해서 두기에 적절한 곳임
+
+  ```java
+  public class UserDaoTest {
+      public static void main(String[] args) throws ClassNotFoundException, SQLException {
+          // UserDao가 사용할 ConnectionMaker 구현 클래스를 결정하고 오브젝트를 만듦
+          ConnectionMaker connectionMaker = new DConnectionMaker();
+          
+          // 1. UserDao 생성
+          // 2. 사용할 ConnectionMaker 타입의 오브젝트 제공
+          //    결국 두 오브젝트 사이의 의존관계 설정 효과
+          UserDao dao = new UserDao(connectionMaker);
+          ...
+      }
+  }
+  ```
+
+  - UserDaoTest는 UserDao와 ConnectionMaker 구현 클래스와의 런타임 오브젝트 의존 관계를 설정하는 책임을 담당
+
+- 인터페이스를 도입하고 클라이언트의 도움을 얻는 방법은 상속을 사용해 비슷한 시도를 했을 경우에 비해서 훨씬 유연함
+
+##### 1.3.4 원칙과 패턴
+
+###### 개방 폐쇄 원칙
+
+- 개방 폐쇄 원칙(OCP, Open-Closed Principle)
+  - 클래스나 모듈은 확장에는 열려 있어야 하고 변경에는 닫혀 있어야 한다
+  - UserDao는 DB 연결 방법이라는 기능을 확장하는 데는 열려있음 
+  - 동시에 UserDao 자신의 핵심 기능을 구현한 코드는 변화에 영향을 받지 않고 유지할 수 있으므로 변경에는 닫혀 있음
