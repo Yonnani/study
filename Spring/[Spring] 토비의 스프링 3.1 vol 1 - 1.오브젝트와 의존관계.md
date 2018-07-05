@@ -172,6 +172,75 @@
 ###### 개방 폐쇄 원칙
 
 - 개방 폐쇄 원칙(OCP, Open-Closed Principle)
-  - 클래스나 모듈은 확장에는 열려 있어야 하고 변경에는 닫혀 있어야 한다
+  - '클래스나 모듈은 확장에는 열려 있어야 하고 변경에는 닫혀 있어야 한다'
   - UserDao는 DB 연결 방법이라는 기능을 확장하는 데는 열려있음 
   - 동시에 UserDao 자신의 핵심 기능을 구현한 코드는 변화에 영향을 받지 않고 유지할 수 있으므로 변경에는 닫혀 있음
+
+> **객체지향 설계 원칙(SOLID)**
+>
+> - 객체지향의 특징을 잘 살릴 수 있는 설계의 특징
+> - 로버트 마틴이 정리한 객체지향 설계 원칙인 SOLID에 대한 소개 사이트
+>   - http://butunclebob.com/ArticleS.UncleBob.PrinciplesOfOod
+> - SOLID, 5가지 객체지향 설계의 원칙
+>   - SRP(The Single Responsibility Principle): 단일 책임 원칙
+>   - OCP(The Open Closed Principle): 개방 폐쇄 원칙
+>   - LSP(The Liskov Substitution Principle): 리스코프 치환 원칙
+>   - ISP(The Interface Segregation Principle): 인터페이스 분리 원칙
+>   - DIP(The Dependency Inversion Principle): 의존관계 역전 원칙
+
+###### 높은 응집도와 낮은 결합도
+
+- 개방 폐쇄 원칙은 높은 응집도와 낮은 결합도(high coherence and low coupling)라는 소프트웨어 개발의 고전적인 원리로도 설명 가능함
+- 높은 응집도
+  - 응집도가 높다는 것은 변화가 일어날 때 해당 모듈에서 변하는 부분이 크다는 것
+- 낮은 결합도
+  - 책임과 관심사가 다른 오브젝트 또는 모듈과는 낮은 결합도, 즉 느슨하게 연결된 형태를 유지하는 것이 바람직
+  - 느슨한 연결은 관계를 유지하는 데 꼭 필요한 최소한의 방법만 간접적인 형태로 제공하고, 나머지는 서로 독립적이고 알 필요도 없게 만들어주는 것임
+  - 결합도란 '하나의 오브젝트가 변경이 일어날 때에 관계를 맺고 있는 다른 오브젝트에게 변화를 요구하는 정도'
+
+###### 전략 패턴
+
+- 개선한 UserDaoTest-UserDao-ConnectionMaker 구조를 디자인 패턴의 시각으로 보면 전략 패턴(Strategy Pattern)에 해당함
+- 전략 패턴은 자신의 기능 맥락(context)에서, 필요에 따라 변경이 필요한 알고리즘을 인터페이스를 통해 통째로 외부로 분리시키고, 이를 구현한 구체적인 알고리즘 클래스를 필요에 따라 바꿔서 사용할 수 있게 하는 디자인 패턴
+
+#### 1.4 제어의 역전(IoC)
+
+- 제어의 역전(Inversion of Control)
+
+##### 1.4.1 오브젝트 팩토리
+
+- UserDaoTest 분리
+  - UserDao와 ConnectionMaker 구현 클래스의 오브젝트를 만드는 것
+  - 그렇게 만들어진 두 개의 오브젝트가 연결돼서 사용될 수 있도록 관계를 맺어주는 것
+
+###### 팩토리
+
+- 팩토리(factory) 오브젝트 : 객체의 생성 방법을 결정하고 그렇게 만들어진 오브젝트를 돌려주는 역할
+
+  - 추상 팩토리 패턴이나 팩토리 메소드 패턴과는 다름
+
+- 팩토리 역할을 맡을 클래스 : DaoFactory
+
+  ```java
+  public class DaoFactory {
+      public UserDao userDao() {
+          // 팩토리의 메소드는 UserDao 타입의 오브젝트를 어떻게 만들고, 어떻게 준비시킬지를 결정함
+          ConnectionMaker connectionMaker = new DConnectionMaker();
+          UserDao userDao = new UserDao(connectionMaker);
+          
+          return userDao;
+      }
+  }
+  ```
+
+  ```java
+  public class UserDaoTest {
+      public static void main(String[] args) throws ClassNotFoundException, SQLException {
+          UserDao dao = new DaoFactory().userDao();
+          ...
+      }
+  }
+  ```
+
+###### 설계도로서의 팩토리
+
