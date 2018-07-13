@@ -480,3 +480,50 @@ if (a) {
 
     `b = a++, a`를 엔진은 `(b = a++), a`로 해석
 
+- 다수의 문을 연결하는 연산자로 `,`를 사용할 때에는 이 연산자의 우선순위가 최하위임
+
+- 예제
+
+  ```javascript
+  if (str && (matches = str.match( /[aeiou]/g ))) {
+      // ...
+  }
+  ```
+
+  - 할당문을 양쪽 `()`로 감싸야함
+  - `&&`가 `=`보다 우선순위가 높음
+  - `(str && matches)`는 정상적인 변수가 아닌, 어떤 값(여기서는 undefined)으로 평가되는데 `=` 할당 연산자 좌측에 값이 나오기때문에 에러남
+
+- 예제
+
+  ```javascript
+  var a = 42;
+  var b = "foo";
+  var c = false;
+  
+  var d = a && b || c ? c || b ? a : c && b : a;
+  
+  d;
+  ```
+
+  - 제일 앞의 `(a && b || c)`가 `(a && b) || c`와 `a && (b || c)` 중 어느 쪽으로 해석될까
+
+    ```javascript
+    (false && true) || true; // true
+    false && (true || true); // false
+    
+    false && true || true; // true
+    (false && true) || true; // true
+    ```
+
+    - `&&` 연산자가 먼저 평가되고 `||` 연산자가 그 다음에 평가됨
+
+    ```javascript
+    true || false && false; // true
+    
+    (true || false) && false; // false
+    true || (false && false); // true
+    ```
+
+##### 5.2.1 단락 평가
+
