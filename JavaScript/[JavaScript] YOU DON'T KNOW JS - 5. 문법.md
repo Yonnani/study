@@ -527,3 +527,49 @@ if (a) {
 
 ##### 5.2.1 단락 평가
 
+- `&&`, `||` 연산자는 좌측 피연산자의 평가 결과만으로 전체 결과가 이미 결정될 경우 우측 피연산자의 평가를 건너뜀
+
+  그래서 '단락(Short Circuited)'이란 말이 유래됨
+
+- 단락 평가는 유용하고 자주 쓰임
+
+  ```javascript
+  function doSomething(opts) {
+      if (opts && opts.cool) {
+          // ...
+      }
+  }
+  ```
+
+  - `opts && opts.cool`에서 `opts`는 일종의 가드
+
+  ```javascript
+  function doSomething(opts) {
+      if (opts.cache || primeCache()) {
+          // ...
+      }
+  }
+  ```
+
+  - `opts.cache`를 먼저 체크해서 OK면, `primeCache()` 함수는 호출하지 않고 넘어갈 수 있음
+
+##### 5.2.2 끈끈한 우정
+
+- `? :`는 `&&`와 `||`보다 우선순위가 높을까 낮을까
+
+  ```javascript
+  a && b || c ? c || b ? a : c && b : a
+  ```
+
+  - 다음 둘 중 어느 쪽으로 처리될까
+
+    ```javascript
+    a && b || (c ? c || (b ? a : c) && b : a)
+    (a && b || c) ? (c || b) ? a : (c && b) : a
+    ```
+
+    - 정답은 아랫 줄
+    - `&&` > `||` > `? :`
+
+##### 5.2.3 결합성
+
