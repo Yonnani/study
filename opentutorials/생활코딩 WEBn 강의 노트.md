@@ -97,3 +97,22 @@
 #### 19.2.1 웹서버 설치 (맥)
 
 - bitnami mamp stack
+
+#### 19.2.2 웹서버와 http (맥)
+
+- `http://127.0.0.1:8080/index.html`
+- `127.0.0.1` : **I**nternet **P**rotocol **Address**
+- `8080` : PORT
+- IP address, File 위치
+  - http : Hyper Text Transfer Protocol
+
+#### 19.2.3 웹브라우저와 웹서버의 통신 (맥)
+
+### 20. 수업을 마치며 1/3
+
+### 21. 수업을 마치며 2/3
+
+
+
+
+
