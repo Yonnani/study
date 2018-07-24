@@ -30,3 +30,21 @@
 
 - html은 정보에 집중할 수 있게 됨
 
+### 04. CSS의 기본 문법
+
+- style 태그를 쓴다, style 속성을 쓴다
+
+- Style 속성
+
+  ```html
+  <a href="#" style="color:red"></a>
+  ```
+
+- 세미콜론
+
+### 05. 혁명적 변화
+
+ ### 06. CSS 속성을 스스로 알아내기
+
+- css property 검색
+
