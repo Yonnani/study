@@ -195,3 +195,40 @@
 
 #### 1.8.5 에이전트
 
+- 사용자 에이전트는 사용자를 위해 HTTP 요청을 만들어주는 클라이언트 프로그램임
+
+### 1.9 시작의 끝
+
+### 1.10 추가 정보
+
+#### 1.10.1 HTTP 프로토콜에 대한 정보
+
+- HTTP Pocket Reference
+  - 책
+- http://www.w3.org/Protocols
+- http://www.ietf.org/rfc/rfc2616.txt
+  - HTTP/1.1의 현재 버전에 대한 공식 명세
+- http://www.ietf.org/rfc/rfc1945.txt
+  - 오늘날의 HTTP 초석이 된 HTTP/1.0을 서술한 정보성(informational) RFC
+- http://www.w3.org/Protocols/HTTP/AsImplemented.html
+
+#### 1.10.2 역사적 시각
+
+- http://www.w3.org/Protocols/WhyHTTP.html
+- http://www.w3.org/History.html
+- http://www.w3.org/DesignIssues/Architecture.html
+
+#### 1.10.3 기타 월드 와이드 웹 정보
+
+- http://www.w3.org
+  - 월드 와이드 웹 컨소시엄(W3C)은 웹을 기술적으로 주도하는 팀
+  - W3C 사이트는 웹 기술에 대한 자세한 문서와 입문 자료의 보고
+- http://www.ietf.org/rfc/rfc2396.txt
+  - URI, URL에 대한 참고
+- http://www.ietf.org/rfc/rfc2141.txt
+  - URN 문법을 묘사한 1997년의 명세
+- http://www.ietf.org/rfc/rfc2046.txt
+  - 멀티미디어 콘텐츠 관리를 위한 다목적 인터넷 메일 확장 표준의 다섯 인터넷 명세 중 두 번째 것
+- http://www.wrec.org/Drafts/draft-ietf-wrec-taxonomy-06.txt
+  - 웹 구성요소에 대한 표준 용어집
+
