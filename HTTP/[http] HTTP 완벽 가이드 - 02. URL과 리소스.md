@@ -35,3 +35,23 @@
 
 #### 2.2.1 스킴: 사용할 프로토콜
 
+- 스킴 컴포넌트는 알파벳으로 시작
+- URL의 나머지 부분들과 첫 번째 `:` 문자로 구분함
+- 대소문자 구분하지 않음
+
+#### 2.2.2 호스트와 포트
+
+- 호스트 컴포넌트는 접근하려고 하는 리소스를 가지고 있는 인터넷상의 호스트 장비를 가리킴
+- 호스트 명이나 IP 주소로 제공함
+- 포트 컴포넌트는 서버가 열어놓은 네트워크 포트를 가리킴
+  - 내부적으로 TCP 프로토콜을 사용하는 HTTP는 기본 포트로 80을 사용함
+
+#### 2.2.3 사용자 이름과 비밀번호
+
+- `ftp://ftp.prep.ai.mit.edu/pub/gnu`
+- `ftp://anonymous@ftp.prep.ai.mit.edu/pub/gnu`
+- `ftp://anonymous:my_passwd@ftp.prep.ai.mit.edu/pub/gnu`
+- `http://joe:joespasswd@www.joes-hardware.com/sales_info.txt`
+
+#### 2.2.4 경로
+
