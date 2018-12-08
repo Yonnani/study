@@ -91,3 +91,44 @@
 
 ### 4.7 필드와 컬럼 매핑: 레퍼런스
 
+#### 4.7.1 @Column
+
+- 참고
+
+  ```java
+  int data1; 		// @Column 생략, 자바 기본 타입
+  data1 integer not null // 생성된 DDL
+  
+  Integer data2; 	// @Column 생략, 객체 타입
+  data2 integer 	// 생성된 DDL
+      
+  @Column
+  int data3;		// @Column 사용, 자바 기본 타입
+  data3 integer	// 생성된 DDL
+  ```
+
+#### 4.7.2 @Enumerated
+
+- 자바의 enum 타입을 매핑할 때 사용
+
+#### 4.7.3 @Temporal
+
+- 날짜 타입(java.util.Date, java.util.Calendar)을 매핑할 때 사용
+
+#### 4.7.4 @Lob
+
+- 데이터베이스 BLOB, CLOB 타입과 매핑
+
+#### 4.7.5 @Transient
+
+- 이 필드는 매핑하지 않음
+- DB에 저장하지 않고 조회하지도 않음
+
+#### 4.7.6 @Access
+
+- JPA가 엔티티 데이터에 접근하는 방식을 지정함
+  - 필드 접근 : `AccessType.Field` 필드에 직접 접근, `private`이어도 접근 가능
+  - 프로퍼티 접근: `AccessType.PROPERTY`로 지정, 접근자(Getter)를 사용함
+
+### 4.8 정리
+
