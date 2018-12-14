@@ -109,5 +109,205 @@ MyApp.WildlifePreserveSimulator = (function() {
 #### 3.4.2 프로토타입 상속
 
 - chimp 객체와 bonobo 객체 생성
-- 공통 프로퍼티를 ape 객체에 담아두면 객체마다 프로퍼티를 반복할 필요가 없음
-- 
+- 공통 프로퍼티를 ape 객체에 담아두면 객체마다 프로퍼티를 반복할 필요가 없음, ape를 공유 프로토타입(shared prototype)으로 둠
+
+```javascript
+var ape = {
+    hasThumbs: true,
+    hasTail: false,
+    swing: function () {
+        return '매달리기';
+    }
+};
+
+var chimp = Object.create(ape);
+
+var bonobo = Object.create(ape);
+bonobo.habitat = '중앙 아프리카';
+
+console.log(bonobo.habitat); // '중앙 아프리카'
+console.log(bonobo.hasTail); // false
+console.log(chimp.swing()); // '매달리기'
+
+ape.hasThumbs = false;
+console.log(chimp.hasThumbs); // false
+console.log(bonobo.hasThumbs); // false
+```
+
+#### 3.4.3 프로토타입 체인
+
+- 프로토타입 체인(prototype chain)이라는 다층 프로토타입을 이용하면 여러 계층의 상속을 구현할 수 있음
+
+```javascript
+var primate = {
+    stereoscopicVision: true
+};
+
+var ape = Object.create(primate);
+ape.hasThumbs = true;
+ape.hasTail = false;
+ape.swing = function () {
+    return "매달리기";
+};
+
+var chimp = Object.create(ape);
+
+console.log(chimp.hasTail);				// false
+console.log(chimp.stereoscopicVision);  // true
+```
+
+- 하지만 너무 깊이 프로토타입 체인을 찾게 되면 성능상 좋지 않을 수 있음
+
+### 3.5 new 객체 생성
+
+#### 3.5.1 new 객체 생성 패턴
+
+- Marsupial 함수는 new 객체 생성 패턴으로 자신의 객체 인스턴스를 생성함
+
+  ```javascript
+  function Marsupial(name, nocturnal) {
+      this.name = name;
+      this.isNocturnal = nocturnal;
+  }
+  
+  var maverick = new Marsupial('매버릭', true);
+  var slider = new Marsupial('슬라이더', false);
+  
+  console.log(maverick.isNocturnal); // true
+  console.log(maverick.name); // "매버릭"
+  
+  console.log(slider.isNocturnal); // false
+  console.log(slider.name); // "슬라이더"
+  ```
+
+##### '나쁜 일'이 벌어질 가능성
+
+- 자바스크립트에서는 new 키워드 없이 생성자 함수를 사용해도 이를 못하게 막을 보호 체계가 없음
+
+##### new를 사용하도록 강제
+
+- instanceof 연산자를 써서 우회적으로 강제하는 방법
+
+  ```javascript
+  function Marsupial(name, nocturnal) {
+      if (!(this instanceof Marsupial)) {
+          throw new Error("이 객체는 new를 사용하여 생성해야 합니다.");
+      }
+      this.name = name;
+      this.isNocturnal = nocturnal;
+  }
+  
+  var slider = Marsupial('슬라이더', true);
+  ```
+
+  ```javascript
+  function Marsupial(name, nocturnal) {
+      if (!(this instanceof Marsupial)) {
+          throw new Marsupial(name, nocturnal);
+      }
+      this.name = name;
+      this.isNocturnal = nocturnal;
+  }
+  
+  var slider = Marsupial('슬라이더', true);
+  
+  console.log(slider.name); // '슬라이더'
+  ```
+
+- new 객체 생성 패턴을 이용하면 정의부 하나로 여러 인스턴스가 함께 사용할 함수 프로퍼티를 생성할 수 있음
+
+  ```javascript
+  function Marsupial(name, nocturnal) {
+      if (!(this instanceof Marsupial)) {
+          throw new Error("이 객체는 new를 사용하여 생성해야 합니다.");
+      }
+      this.name = name;
+      this.isNocturnal = nocturnal;
+      
+      // 각 객체 인스턴스는 자신만의 isAwake 사본을 가진다.
+      this.isAwake = function(isNight) {
+          return isNight === this.isNocturnal;
+      }
+  }
+  
+  var maverick = new Marsupial('매버릭', true);
+  var slider = new Marsupial('슬라이더', false);
+  
+  var isNightTime = true;
+  
+  console.log(maverick.isAwake(isNightTime)); // true
+  console.log(slider.isAwake(isNightTime)); 	// false
+  
+  // 각 객체는 자신의 isAwake 함수를 가진다.
+  console.log(maverick.isAwake === slider.isAwake); // false
+  ```
+
+- 생성자 함수 프로토타입에 함수를 추가
+
+  ```javascript
+  function Marsupial(name, nocturnal) {
+      if (!(this instanceof Marsupial)) {
+          throw new Error("이 객체는 new를 사용하여 생성해야 합니다.");
+      }
+      this.name = name;
+      this.isNocturnal = nocturnal;
+  }
+  // 각 객체는 isAwake 사본 하나를 공유한다.
+  Marsupial.prototype.isAwake = function(isNight) {
+      return isNight === this.isNocturnal;
+  }
+  var maverick = new Marsupial('매버릭', true);
+  var slider = new Marsupial('슬라이더', false);
+  
+  var isNightTime = true;
+  
+  console.log(maverick.isAwake(isNightTime)); // true
+  console.log(slider.isAwake(isNightTime)); 	// false
+  
+  // 객체들은 isAwake의 단일 인스턴스를 공유한다.
+  console.log(maverick.isAwake === slider.isAwake); // true
+  ```
+
+- 생성자 프로토타입을 매개로 모든 객체 인스턴스가 `isAwake` 함수 사본 하나를 공유한 코드가 객체 인스턴스 각각 `isAwake` 함수 사본을 생성하여 들고 있는 코드보다 실행이 빠름
+
+### 3.6 클래스 상속
+
+#### 3.6.1 고전적 상속 흉내 내기
+
+```javascript
+function Marsupial(name, nocturnal) {
+    if (!(this instanceof Marsupial)) {
+        throw new Error("이 객체는 new를 사용하여 생성해야 합니다.");
+    }
+    this.name = name;
+    this.isNocturnal = nocturnal;
+}
+Marsupial.prototype.isAwake = function(isNight) {
+    return isNight === this.isNocturnal;
+}
+
+function Kangaroo(name) {
+    if (!(this instanceof Kangaroo)) {
+        throw new Error("이 객체는 new를 사용하여 생성해야 합니다.");
+    }
+    this.name = name;
+    this.isNocturnal = false;
+}
+
+Kangaroo.prototype = new Marsupial();
+Kangaroo.prototype.hop = function() {
+    return this.name + " 가 껑충 뛰었어요!";
+};
+var jester = new Kangaroo("제스터");
+console.log(jester.name);
+
+var isNightTime = false;
+console.log(jester.isAwake(isNightTime));	// true
+console.log(jester.hop());					// '제스터가 껑충 뛰었어요!'
+
+console.log(jester instanceof Kangaroo);	// true
+console.log(jester instanceof Marsupial);	// true
+```
+
+#### 3.6.2 반복이 캥거루 잡네
+
