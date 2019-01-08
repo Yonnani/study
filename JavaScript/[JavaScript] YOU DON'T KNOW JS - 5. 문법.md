@@ -598,3 +598,38 @@ var a = foo() && bar();
 
 #### 5.4 에러
 
+- 올바르지 않은 정규 표현식은 조기 에러(Early Error)를 던짐
+
+  ```javascript
+  var a = /+foo/; // 에러
+  ```
+
+- 할당 대상은 반드시 식별자여야 함
+
+  ```javascript
+  var a;
+  42 = a; // 에러
+  ```
+
+- ES5 엄격 모드에서 함수 인자명은 중복될 수 없음
+
+  ```javascript
+  function foo(a, b, a) { } // 정상 실행
+  function bar(a, b, a) { "use strict"; } // 에러
+  ```
+
+- 동일한 이름의 프로퍼티가 여러 개 있는 객체 리터럴
+
+  ```javascript
+  (function() {
+      "use strict";
+      
+      var a = {
+          b: 42,
+          b: 43
+      }; // 에러
+  })();
+  ```
+
+##### 5.4.1 너무 이른 변수 사용
+
