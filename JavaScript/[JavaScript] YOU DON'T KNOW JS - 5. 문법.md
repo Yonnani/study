@@ -633,3 +633,28 @@ var a = foo() && bar();
 
 ##### 5.4.1 너무 이른 변수 사용
 
+- ES6는 `임시 데드 존(TDZ, Temporal Dead Zone)`이라는 개념 도입
+
+  - TDZ는 아직 초기화를 하지 않아 변수를 참조할 수 없는 코드 영역
+
+  - ex. ES6의 `let` 블록 스코핑
+
+    ```javascript
+    {
+        a = 2; // ReferenceError!
+        let a;
+    }
+    ```
+
+  - 원래 `typeof` 연산자는 선언되지 않은 변수 앞에 붙여도 오류나지 않는데 TDZ 참조 시에는 에러남
+
+    ```javascript
+    {
+        typeof a; // undefined
+        typeof b; // ReferenceError! (TDZ)
+        let b;
+    }
+    ```
+
+#### 5.5 함수 인자
+
