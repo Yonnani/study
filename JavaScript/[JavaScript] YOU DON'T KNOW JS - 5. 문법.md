@@ -658,3 +658,37 @@ var a = foo() && bar();
 
 #### 5.5 함수 인자
 
+- TDZ 관련 에러는 ES6 디폴트 인자 값에서도 나타남
+
+  ```javascript
+  var b = 3;
+  function foo( a = 42, b = a + b + 5 ) {
+      // ...
+  }
+  ```
+
+  - 두번째 할당문에서 좌변 b는 아직 TDZ에 남아있는 b를 참조하려고 하기 때문에 에러!
+  - 인자 a는 TDZ를 밟고 간 이후여서 에러 나지 않음
+
+- ES6 디폴트 인자 값은 함수에 인자를 넘기지 않거나 undefined를 전달했을 때 적용됨
+
+  ```javascript
+  function foo( a = 42, b = a + 1 ) {
+      console.log( a, b );
+  }
+  
+  foo(); // 42, 43
+  foo( undefined ); // 42, 43
+  foo( 5 ); // 5, 6
+  foo( void 0, 7 ); // 42 7
+  foo( null ); // null 1 (null은 0으로 강제변환됨)
+  ```
+
+- ES6 디폴트 인자 값이 arguments 배열 슬롯과 이에 대응하는 인자 값 간의 불일치를 초래(ES5에서도 불일치 발생함)
+
+  - 인자를 넘기면 arguments의 슬롯과 인자가 연결되면서 항상 같은 값이 할당되지만 인자 없이 호출하면 연결되지 않음
+
+- `인자와 이 인자에 해당하는 arguments 슬롯을 동시에 참조하지 마라`는 규칙만 준수하면 arguments 배열과 인자를 섞어 사용해도 안전함
+
+#### 5.6 try...finally
+
