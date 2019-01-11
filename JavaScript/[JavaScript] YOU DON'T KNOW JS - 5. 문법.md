@@ -692,3 +692,73 @@ var a = foo() && bar();
 
 #### 5.6 try...finally
 
+- try 이후에는 `catch`, `finally` 중 하나만 필수
+
+- `finally` 절의 코드는 반드시 실행되고 다른 코드로 넘어가기 전에 `try` 이후부터 항상 실행됨
+
+- ```javascript
+  function foo() {
+      try {
+          return 42;
+      }
+      finally {
+          console.log("Hello");
+      }
+      console.log("절대 실행될 리 없지")
+  }
+  
+  console.log( foo() );
+  // Hello
+  // 42
+  ```
+
+  - `return 42`에서 `foo()` 함수의 완료 값은 42로 셋팅되고, try 절의 실행이 종료되면서 곧바로 `finally` 절로 넘어감
+  - 그 후 `foo()` 함수 전체의 실행이 끝나고 완료 값은 호출부에 반환됨
+
+- try 안에 throw가 있어도 비슷함
+
+  ```javascript
+  function foo() {
+      try {
+          throw 42;
+      }
+      finally {
+          console.log("Hello");
+      }
+      
+      console.log("실행될 리 없지!");
+  }
+  
+  console.log( foo() );
+  // Hello
+  // Uncaught Exception: 42
+  ```
+
+- 만약 `finally` 절에서 예외가 던져지면, 이전의 실행 결과는 모두 무시함
+
+  ```javascript
+  function foo() {
+      try {
+          return 42;
+      }
+      finally {
+          throw "어이쿠!";
+      }
+      
+      console.log("실행될 리 없지!");
+  }
+  
+  console.log( foo() );
+  // Uncaught Exception: 어이쿠!
+  ```
+
+- `continue`나 `break` 같은 비선형(Nonlinear) 제어문도 return과 throw와 비슷하게 작동
+
+- `finally` 절의 `return`은 그 이전에 실행된 `try`나 `catch` 절의 `return`을 덮어씀
+
+- 보통 함수에서는 `return`을 생략해도 `return;` 또는 `return undefined;`한 것으로 치지만, `finally` 안에서 `return`을 빼면 이전의 `return`을 무시하지 않음
+
+- `return`을 취소해버리는 `finally + 레이블 break` 코드는 피하자
+
+#### 5.7 switch
+
