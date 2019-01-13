@@ -762,3 +762,30 @@ var a = foo() && bar();
 
 #### 5.7 switch
 
+- `switch` 표현식과 `case` 표현식 간의 매치 과정은 `===` 알고리즘과 똑같음
+
+- 강제변환이 일어나는 동등 비교(`==`)를 이용하고 싶으면
+
+  ```javascript
+  var a = "42";
+  switch (true) {
+      case a == 10:
+          console.log("10 또는 '10'");
+          break;
+      case a == 42:
+          console.log("42 또는 '42'");
+          break;
+      default:
+          // 여기 올 일은 없음
+  }
+  // 42 또는 '42'
+  ```
+
+- case 표현식 평가 결과가 truthy이지만 엄격히 true는 아닐 경우 매치는 실패
+
+  - 표현식에 `&&`나 `||`같은 '논리 연산자'를 사용할 때 문제가 됨
+
+- default에서도 break를 안 쓰면 그 이후 코드가 계속 실행됨
+
+#### 5.8 정리하기
+
