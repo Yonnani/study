@@ -1,4 +1,2 @@
-function logName(name) {
-    console.log(name);
-}
-logName('asdf');
+var a = 5;
+a = 10;
