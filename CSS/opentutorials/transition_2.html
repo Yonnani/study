@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+	<style>
+		body {
+			background-color: black;
+			transition: all 1s;
+		}
+		div {
+			background-color: black;
+			color: white;
+			padding: 10px;
+			width: 100px;
+			height: 50px;
+			-webkit-transition: all 500ms cubic-bezier(0.680, 0, 0.265, 1); /* older webkit */
+      -webkit-transition: all 500ms cubic-bezier(0.680, -0.550, 0.265, 1.550); 
+         -moz-transition: all 500ms cubic-bezier(0.680, -0.550, 0.265, 1.550); 
+           -o-transition: all 500ms cubic-bezier(0.680, -0.550, 0.265, 1.550); 
+              transition: all 500ms cubic-bezier(0.680, -0.550, 0.265, 1.550); /* easeInOutBack */
+ 
+      -webkit-transition-timing-function: cubic-bezier(0.680, 0, 0.265, 1); /* older webkit */
+      -webkit-transition-timing-function: cubic-bezier(0.680, -0.550, 0.265, 1.550); 
+         -moz-transition-timing-function: cubic-bezier(0.680, -0.550, 0.265, 1.550); 
+           -o-transition-timing-function: cubic-bezier(0.680, -0.550, 0.265, 1.550); 
+              transition-timing-function: cubic-bezier(0.680, -0.550, 0.265, 1.550); /* easeInOutBack */
+		}
+		div:hover {
+			height: 400px;
+		}
+	</style>
+</head>
+<body onload="document.querySelector('body').style.backgroundColor='white';">
+	<div>
+		TRANSITION
+	</div>
+</body>
+</html>
