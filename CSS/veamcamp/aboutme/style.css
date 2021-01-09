@@ -107,3 +107,15 @@ body {
 	margin-left: 0.1em;
 	position: relative;
 }
+
+.icons {
+	
+}
+
+.icons a {
+	background-image: url(images/icons.png);
+	width: 30px;
+	height: 30px;
+	display: inline-block;
+	text-indent: -9999px;
+}
