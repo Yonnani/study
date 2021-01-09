@@ -18,7 +18,7 @@
 }
 
 /* CSS Reset */
-body, h1, p, ul {
+body, h1, h2, h3, p, ul {
 	margin: 0;
 	padding: 0;
 }
@@ -27,7 +27,7 @@ li {
 	list-style-type: none;
 }
 
-h1 {
+h1, h2, h3 {
 	font-size: 100%;
 	font-weight: normal;
 }
@@ -57,11 +57,13 @@ body {
 
 .profile-header,
 .profile-section {
-	padding-bottom: 7%;
+	padding-bottom: 14%;
 }
 
-.profile-header {
-	
+.profile-section h2 {
+	border-top: 3px solid;
+	color: orangered;
+	margin-bottom: 20px;
 }
 
 .name {
@@ -109,7 +111,7 @@ body {
 }
 
 .icons {
-	
+	margin: 20px 0;
 }
 
 .icons a {
@@ -118,4 +120,30 @@ body {
 	height: 30px;
 	display: inline-block;
 	text-indent: -9999px;
+}
+
+.icons a.twitter  { background-position: left top; }
+.icons a.facebook { background-position: center top; }
+.icons a.pinterest { background-position: right top; }
+
+.icons a:hover { background-position-y: bottom; }
+
+.timeline {
+	font-size: 0.7rem;
+}
+
+.timeline li {
+	padding-bottom: 30px;
+}
+
+.timeline li:last-child {
+	padding-bottom: 0;
+}
+
+.timeline li h3 {
+	color: orange;
+	float: left;
+	font-size: 1rem;
+	margin-right: 0.5em;
+	border-top: 3px solid;
 }
