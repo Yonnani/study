@@ -64,6 +64,7 @@ body {
 	border-top: 3px solid;
 	color: orangered;
 	margin-bottom: 20px;
+	padding: 0.5em 0;
 }
 
 .name {
@@ -129,7 +130,8 @@ body {
 .icons a:hover { background-position-y: bottom; }
 
 .timeline {
-	font-size: 0.7rem;
+	font-size: 0.9rem;
+	color: #666;
 }
 
 .timeline li {
@@ -144,6 +146,20 @@ body {
 	color: orange;
 	float: left;
 	font-size: 1rem;
+	letter-spacing: 0.2em;
 	margin-right: 0.5em;
-	border-top: 3px solid;
+	border-top: 2px solid;
+}
+
+.graph li {
+	background-color: dodgerblue;
+	color: #111;
+	padding: 0.5em 1em;
+	margin: 0.4em 0;
+	border-radius: 50px;
+}
+
+.graph li::before {
+	content: attr(data-score);
+	float: right;
 }
