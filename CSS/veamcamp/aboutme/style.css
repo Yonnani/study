@@ -152,14 +152,23 @@ body {
 }
 
 .graph li {
-	background-color: dodgerblue;
-	color: #111;
+	background: rgb(199,113,247);
+background: linear-gradient(90deg, rgba(199,113,247,1) 0%, rgba(119,61,214,1) 49%, rgba(95,88,247,1) 100%);
+	color: white;
 	padding: 0.5em 1em;
 	margin: 0.4em 0;
 	border-radius: 50px;
+	box-sizing: border-box;
 }
 
 .graph li::before {
 	content: attr(data-score);
 	float: right;
 }
+
+.graph li[data-score="100%"] { width: 100%; }
+.graph li[data-score="90%"] { width: 90%; }
+.graph li[data-score="80%"] { width: 80%; }
+.graph li[data-score="70%"] { width: 70%; }
+.graph li[data-score="60%"] { width: 60%; }
+.graph li[data-score="50%"] { width: 50%; }
