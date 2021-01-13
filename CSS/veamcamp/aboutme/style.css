@@ -18,7 +18,7 @@
 }
 
 /* CSS Reset */
-body, h1, h2, h3, p, ul {
+body, h1, h2, h3, p, ul, dl, dd {
 	margin: 0;
 	padding: 0;
 }
@@ -172,3 +172,9 @@ background: linear-gradient(90deg, rgba(199,113,247,1) 0%, rgba(119,61,214,1) 49
 .graph li[data-score="70%"] { width: 70%; }
 .graph li[data-score="60%"] { width: 60%; }
 .graph li[data-score="50%"] { width: 50%; }
+
+.list dt {
+	color: orange;
+	float: left;
+	width: 4em;
+}
