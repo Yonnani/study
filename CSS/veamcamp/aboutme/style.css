@@ -52,7 +52,7 @@ body {
 }
 
 .profile {
-	padding: 7%;
+	padding: 5%;
 }
 
 .profile-header,
@@ -189,4 +189,35 @@ background: linear-gradient(90deg, rgba(199,113,247,1) 0%, rgba(119,61,214,1) 49
 
 .list dd {
 	overflow: hidden;
+}
+
+@media (min-width: 768px) {
+	.portrait {
+		position: fixed;
+		left: 0;
+		top: 0;
+		width: 60vw;
+		height: 100vh;
+		padding: 0;
+	}
+	.profile {
+		margin-left: 60vw;
+	}
+	.name {
+		font-size: 4vw;
+		top: -2.9em;
+	}
+	.timeline {
+		margin: 0 -10px;
+	}
+	.timeline li {
+		width: 50%;
+		padding: 0 10px;
+		box-sizing: border-box;
+	}
+	.timeline li:nth-child(even) {
+		margin-left: auto;
+		margin-top: -70px;
+		margin-bottom: -70px;
+	}
 }
