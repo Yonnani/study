@@ -65,6 +65,10 @@ body {
 	color: orangered;
 	margin-bottom: 20px;
 	padding: 0.5em 0;
+	position: sticky;
+	top: 0;
+	background-color: #111;
+	box-shadow: 0 0 50px 10px #111;
 }
 
 .name {
@@ -73,6 +77,10 @@ body {
 	font-style: italic;
 	margin-bottom: 40px;
 	font-family: 'Open Sans', sans-serif;
+	position: sticky;
+	top: -1.4em;
+	background-color: #111;
+	box-shadow: 0 0 50px 10px #111;
 }
 
 .name-job {
@@ -177,4 +185,8 @@ background: linear-gradient(90deg, rgba(199,113,247,1) 0%, rgba(119,61,214,1) 49
 	color: orange;
 	float: left;
 	width: 4em;
+}
+
+.list dd {
+	overflow: hidden;
 }
