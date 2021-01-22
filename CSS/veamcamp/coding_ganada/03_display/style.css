@@ -1,0 +1,41 @@
+body {
+	background-color: #ddd;
+}
+
+.box {
+	background-color: white;
+	width: 740px;
+	margin: 400px auto 0;
+	text-align: center;
+	border-radius: 20px;
+	border-right: 5px solid #ccc;
+	border-bottom: 5px solid #999;
+}
+
+.box h1 {
+	color: orangered;
+	border-bottom: 10px solid orangered;
+	background-color: aquamarine;
+	width: 250px;
+	margin: 40px auto;
+	font-size: 4rem;
+}
+
+.box p {
+	padding: 3rem;
+}
+
+.box-cover {
+	margin-top: -300px;
+}
+
+strong.bold {
+	background-color: orange;
+	color: white;
+	width: 300px;
+	height: 300px;
+	margin: 20px auto;
+	padding: 20px;
+	border: 5px solid orangered;
+	display: none;
+}
