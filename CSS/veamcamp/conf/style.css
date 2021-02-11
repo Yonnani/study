@@ -28,6 +28,7 @@ h1, h2 {
     --normal-color: dodgerblue;
     --primary-color: lightgreen;
     --secondary-color: salmon;
+    --light-color: skyblue;
 }
 
 /* Layout */
@@ -76,7 +77,9 @@ body {
 }
 
 .timeline li {
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
 }
 
 .parts {
@@ -86,11 +89,54 @@ body {
 }
 
 .parts-times {
-    background-color: orange;
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    color: var(--light-color);
+}
+
+.parts-times span {
+    margin: 0 0.4em;
 }
 
 .parts-contents {
-    background-color: orangered;
     display: flex;
     align-items: center;
+}
+
+.parts-profile { 
+    width: 80px;
+    border-radius: 4px 50% 50% 4px;
+}
+
+.parts-agenda {
+    padding: 0 2rem;
+    font-size: 2rem;
+}
+
+.parts-agenda p {
+    margin: 4px 0;
+    color: var(--secondary-color);
+    display: flex;
+    align-items: center;
+}
+
+.parts-role {
+    color: var(--normal-color);
+    display: flex;
+    align-items: center;
+}
+
+.parts-role::before {
+    content: ' ';
+    width: 0.4em;
+    height: 0.4em;
+    margin: 0 0.6em;
+    border-radius: 50%;
+    background-color: currentColor;
+}
+
+.parts-agenda h2 {
+    color: var(--primary-color);
+    font-size: 3.2rem;
 }
