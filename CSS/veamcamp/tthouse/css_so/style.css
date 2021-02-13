@@ -1,0 +1,56 @@
+/* Reset */
+body {
+    margin: 0;
+}
+
+h1 {
+    margin: 0;
+    font-size: 100%;
+    font-weight: normal;
+}
+
+strong {
+    font-weight: normal;
+}
+
+:root {
+    --primary-color: saddlebrown;
+    --secondary-color: burlywood;
+}
+
+/* Layouts */
+.center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Design */
+body {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    text-align: center;
+    font-family: "arial";
+}
+
+.cow {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    width: 300px;
+    height: 300px;
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+}
+
+.title {
+    line-height: 1;
+    font-size: 100px;
+    padding: 40px 0;
+}
+
+.title strong {
+    font-weight: bold;
+}
