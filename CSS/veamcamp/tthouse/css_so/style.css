@@ -41,8 +41,24 @@ body {
     height: 300px;
     border-top-left-radius: 40px;
     border-top-right-radius: 40px;
-    border-bottom-left-radius: 40px;
-    border-bottom-right-radius: 40px;
+    border-bottom-left-radius: 70px;
+    border-bottom-right-radius: 70px;
+}
+
+.horn {
+    background-color: white;
+    height: 80px;
+    border-bottom-left-radius: 70px;
+    border-bottom-right-radius: 70px;
+}
+
+.horn::before {
+    content: 'wow';
+    display: block;
+    height: 40px;
+    border-bottom-left-radius: 120px;
+    border-bottom-right-radius: 120px;
+    background-color: var(--primary-color);
 }
 
 .title {
