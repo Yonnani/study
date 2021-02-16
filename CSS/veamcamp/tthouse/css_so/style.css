@@ -17,6 +17,7 @@ strong {
     --primary-color: saddlebrown;
     --secondary-color: burlywood;
     --white-color: white;
+    --red-color: orangered;
 }
 
 /* Layouts */
@@ -39,12 +40,14 @@ body {
     background-color: var(--secondary-color);
     color: var(--primary-color);
     width: 200px;
-    height: 300px;
+    /* height: 300px; */
     margin: 0 auto;
+    padding-bottom: 20px;
     border-top-left-radius: 40px;
     border-top-right-radius: 40px;
-    border-bottom-left-radius: 70px;
-    border-bottom-right-radius: 70px;
+    border-bottom-left-radius: 100px;
+    border-bottom-right-radius: 100px;
+    box-shadow: inset 0 0 30px currentColor;
 }
 
 .horn {
@@ -53,6 +56,7 @@ body {
     border-bottom-left-radius: 70px;
     border-bottom-right-radius: 70px;
     margin: 0 -40px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
 }
 
 .horn::before {
@@ -72,6 +76,7 @@ body {
     margin: 0 60px;
     transform: translateY(-10px);
     border-radius: 20px;
+    box-shadow: inset 0 -15px 20px currentColor;
 }
 
 .eyes {
@@ -92,6 +97,51 @@ body {
     margin: 10px;
     border-radius: 50%;
     box-shadow: inset 0 -6px 0 10px currentColor;
+}
+
+.nose {
+    display: flex;
+    justify-content: space-between;
+    padding: 30px;
+    margin: 0 -10px;
+    background-color: var(--secondary-color);
+    border-radius: 40px;
+}
+
+.nose::before,
+.nose::after {
+    content: ' ';
+    width: 10px;
+    height: 10px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+}
+
+.mouth {
+    background-color: var(--secondary-color);
+    height: 50px;
+    margin: 0 40px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    box-shadow: 0 10px 10px currentColor;
+    position: relative;
+}
+
+.mouth::after {
+    content: ' ';
+    background-color: var(--red-color);
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 20px;
+    margin: 0 30px;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+    border-bottom: 20px solid var(--secondary-color);
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    transform: translateY(100%);
 }
 
 .title {
