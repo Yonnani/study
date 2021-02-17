@@ -20,6 +20,24 @@ strong {
     --red-color: orangered;
 }
 
+@keyframes size {
+    0% {
+        transform: scale(0.8);
+    }
+    100% {
+        transform: scale(1) rotate(-10deg);
+    }
+}
+
+@keyframes eat {
+    0% {
+        height: 0;
+    }
+    100% {
+        height: 40px;
+    }
+}
+
 /* Layouts */
 .center {
     position: absolute;
@@ -40,7 +58,6 @@ body {
     background-color: var(--secondary-color);
     color: var(--primary-color);
     width: 200px;
-    /* height: 300px; */
     margin: 0 auto;
     padding-bottom: 20px;
     border-top-left-radius: 40px;
@@ -48,6 +65,10 @@ body {
     border-bottom-left-radius: 100px;
     border-bottom-right-radius: 100px;
     box-shadow: inset 0 0 30px currentColor;
+    animation-name: size;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
 }
 
 .horn {
@@ -142,6 +163,10 @@ body {
     border-bottom-left-radius: 30px;
     border-bottom-right-radius: 30px;
     transform: translateY(100%);
+    animation-name: eat;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
 }
 
 .title {
