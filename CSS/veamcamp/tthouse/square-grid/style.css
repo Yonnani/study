@@ -1,0 +1,23 @@
+/* Reset */
+body, ul {
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    list-style-type: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+body {
+    background-color: #222;
+}
+
+.wrapper {
+    background-color: #111;
+    color: white;
+}
