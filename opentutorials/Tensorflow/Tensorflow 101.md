@@ -44,5 +44,9 @@
 
 ## 12. 보스턴 집값 예측 (실습)
 
+## 13. 학습의 실제 (with 워크북)
+
+- `https://docs.google.com/spreadsheets/d/1de6dkj80Q39l9XWPdaaFwsRF7f9xAAtsj3EiOmohSvk/edit?usp=sharing`
+
 
 
