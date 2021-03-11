@@ -48,5 +48,35 @@
 
 - `https://docs.google.com/spreadsheets/d/1de6dkj80Q39l9XWPdaaFwsRF7f9xAAtsj3EiOmohSvk/edit?usp=sharing`
 
+## 14. 아이리스 품종 분류
 
+- 종속변수가 양적 데이터이면 회귀(regression) 알고리즘 사용
+- 종속변수가 범주형 데이터이면 분류(classification) 알고리즘 사용
 
+## 15. 원핫인코딩
+
+- 원핫인코딩(onehot-encoding) : 범주형 데이터를 1, 0으로 바꿔주는 과정
+
+- ```python
+  # 원핫인코딩
+  아이리스 = pd.get_dummies(아이리스)
+  ```
+
+## 16. softmax
+
+- 분류 모델이 하는 일 : 분류를 추측하는 것
+  - 0~100%로 추측
+  - sigmold
+  - softmax
+
+- y<sub>1</sub> = softmax(w<sub>1</sub>x<sub>1</sub> + w<sub>2</sub>x<sub>2</sub> + w<sub>3</sub>x<sub>3</sub> + w<sub>4</sub>x<sub>4</sub> + b)
+
+  y<sub>2</sub> = softmax(w<sub>1</sub>x<sub>1</sub> + w<sub>2</sub>x<sub>2</sub> + w<sub>3</sub>x<sub>3</sub> + w<sub>4</sub>x<sub>4</sub> + b)
+
+  y<sub>3</sub> = softmax(w<sub>1</sub>x<sub>1</sub> + w<sub>2</sub>x<sub>2</sub> + w<sub>3</sub>x<sub>3</sub> + w<sub>4</sub>x<sub>4</sub> + b)
+
+- y = f(w<sub>1</sub>x<sub>1</sub> + w<sub>2</sub>x<sub>2</sub> + w<sub>3</sub>x<sub>3</sub> + w<sub>4</sub>x<sub>4</sub> + b)
+
+  - f: Activation 활성화 함수
+    - 회귀모델: Identity (y = x)
+    - 분류모델: Softmax
