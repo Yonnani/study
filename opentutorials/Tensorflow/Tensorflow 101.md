@@ -80,3 +80,6 @@
   - f: Activation 활성화 함수
     - 회귀모델: Identity (y = x)
     - 분류모델: Softmax
+
+## 17. 아이리스 품종 분류 (실습)
+
