@@ -83,3 +83,22 @@
 
 ## 17. 아이리스 품종 분류 (실습)
 
+## 18. 히든레이어
+
+- Input Layer => Hidden Layer => Output Layer
+
+  - 보스턴 집값 예측에서 (506, 13) => (506, 5) => (506, 1)
+
+  - ```python
+    # 2. 모델의 구조를 만듭니다.
+    X = tf.keras.layers.Input(shape=[13])
+    H = tf.keras.layers.Dense(5, activation='swish')(X)
+    H = tf.keras.layers.Dense(3, activation='swish')(H)
+    H = tf.keras.layers.Dense(3, activation='swish')(H)
+    Y = tf.keras.layers.Dense(1)(H)
+    model = tf.keras.models.Model(X, Y)
+    model.compile(loss='mse')
+    ```
+
+## 19. 히든레이어 (실습)
+
