@@ -1,17 +1,30 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import * as React from 'react'; // 
+import ReactDOM from 'react-dom'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+const ThemeContext = React.createContext();
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+const Content = () => {
+  const context = React.useContext(ThemeContext);
+  return (
+    <section className={`theme-${context.theme}`}>
+      <span>Current theme: {context.theme}</span>
+      <button onClick={context.switchTheme}>Switch Theme</button>
+    </section>
+  );
+};
+
+function App() {
+  const [theme, setTheme] = React.useState("dark");
+  const switchTheme = () => {
+    theme === 'dark' ? setTheme('light') : setTheme('dark');
+  };
+  return (
+    <ThemeContext.Provider value={{theme, switchTheme}}>
+      <Content />
+    </ThemeContext.Provider>
+  );
+}
+
+document.body.innerHTML = "<div id='root'></div>";
+const rootElement = document.getElementById("root");
+ReactDOM.render(<App />, rootElement);
