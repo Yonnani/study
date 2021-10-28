@@ -1,0 +1,50 @@
+# 코드스피츠72 - CSS rendering 2
+
+- box model
+  - margin - border - padding - contents
+  - margin은 투명
+  - border 외곽선 경계면
+    - 하지만 width로 컨텐츠처럼 쓸 수 있음
+    - border background 줄 수 있음
+  - padding
+    - 투명
+    - 내부 margin
+  - contents
+    - 요소 배치
+- box-sizing
+  - width height 계산할 때 적용됨
+  - margin - border-box - padding-box - contents-box
+  - border-box를 기준으로 width 정함 : MS
+  - contents-box를 기준으로 width 정함 : CSS 2.1 표준
+  - box-sizing 설정 가능
+  - 기본은 contents-box
+- box-shadow
+  - 사이즈에 계산 안 됨
+  - box-shadow로 외곽선 표현하는 경우 margin으로 영역을 확보할 필요가 있음
+  - box-shadow inset : border 안쪽에도 외곽선을 줄 수 있음
+  - 무한히 만들 수 있음
+  - outline 
+    - border-box 바깥쪽에 그려짐
+    - box-shadow의 위쪽에 올라옴
+- 컨텐츠 안에 있는 애들은 부모로부터 얼마로 계산됨 : %
+- transform의 100%는 자신 기준으로 계산
+- 인라인요소는 공백 문자를 전부 text element 로 처리
+- background는 border-box 전체 다 색칠
+- border-box를 통해서 padding을 대신할 수 있음
+- box-shadow
+  - x offset, y offset, blur size, 확산 사이즈, 색깔
+  - box 사이즈를 차지하지 않음
+  - 차지하려면 margin이 있어야함
+
+ - static 요소 간에도 z-index 적용됨
+ - 뒤에 나온 요소가 덮음
+ - normal flow 뒤에 rp가 덮기 때문에 position: relative가 덮음
+ - inset
+   	- box-shadow 제일 앞에 inset 넣음
+   	- border-box 안쪽에 들어옴
+ - box-shadow는 ,로 무한히 넣을 수 있음
+   	- 뒤부터 그림
+ - box-shadow의 장점은 border-radius가 따라옴
+ - box-shadow : animationed 속성
+ - 시트라는 객체, rule, rule-set
+ - 지시자 가지고 있는 엘리먼트 있음 : media, import, important, keyframes...
