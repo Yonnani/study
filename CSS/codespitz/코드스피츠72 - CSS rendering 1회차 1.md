@@ -17,7 +17,7 @@
 
 - fixed number 체계
 
-  - x, y, width, height, 
+  - x, y, width, height, color
   - screen size, chrome size, hierarchy 대응 안 됨
 
 - Abstract calculator
